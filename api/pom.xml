@@ -11,8 +11,8 @@
 	<groupId>com.unilink</groupId>
 	<artifactId>api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>unilinkapi</name>
-	<description>Demo project for Spring Boot</description>
+	<name>unilinkApi</name>
+	<description>Unilink api</description>
 	<url/>
 	<licenses>
 		<license/>
