@@ -14,24 +14,6 @@ Este repositório contempla o backend da aplicação. O repositório do frontend
 - **Virtualização e portabilidade**: Docker
 - **Geração de documentação**: JavaDoc
 
-## Gerar documentação
-Para gerar a documentação do projeto, execute o seguinte comando no terminal:
-```bash
-mvn javadoc:javadoc
-```
-
-## Instalação de requisito
-
-Instalar o Maven pelo site:
-
-[https://maven.apache.org/download.cgi](https://maven.apache.org/download.cgi)
-
-Ou, se você estiver no Ubuntu, execute o comando:
-
-```bash
-sudo apt install maven
-```
-
 ## Execução
 
 Para clonar e acessar o repositório, execute os seguintes comandos no terminal:
@@ -43,6 +25,13 @@ cd unilink-backend
 Para iniciar a API, execute o seguinte comando:
 ```bash
 ./mvnw spring-boot:run
+```
+
+## Gerar documentação
+
+Para gerar a documentação do projeto, execute o seguinte comando no terminal:
+```bash
+./mvnw javadoc:javadoc
 ```
 
 ## Desenvolvedores
