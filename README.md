@@ -6,6 +6,11 @@ O foco é proporcionar uma forma rápida e acessível para que os alunos encontr
 
 Este repositório contempla o backend da aplicação. O repositório do frontend está disponível [aqui](https://github.com/raphaelitos/unilink-frontend).
 
+## Diagrama UML
+
+![UML](imgs/uml.png)
+
+
 ## Ferramentas escolhidas
 - **Framework Backend**: Spring Boot
 - **Building**: Maven
