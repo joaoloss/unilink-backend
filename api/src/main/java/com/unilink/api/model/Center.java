@@ -2,12 +2,11 @@ package com.unilink.api.model;
 
 import java.util.UUID;
 
-import org.hibernate.service.spi.InjectService;
-
-import jakarta.annotation.Generated;
+import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,10 +16,12 @@ import lombok.Setter;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@Entity
+@Table(name = "centers")
 public class Center {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Setter(lombok.AccessLevel.NONE)
     private UUID id;
     
