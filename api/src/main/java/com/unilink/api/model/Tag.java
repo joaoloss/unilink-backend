@@ -39,4 +39,17 @@ public class Tag {
         projects.remove(project);
         project.getTags().remove(this);
     }
+
+    @Override
+    public int hashCode() {
+        return this.getClass().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || !(obj instanceof Tag)) return false;
+        Tag other = (Tag) obj;
+        return this.id != null && this.id.equals(other.id);
+    }
 }
