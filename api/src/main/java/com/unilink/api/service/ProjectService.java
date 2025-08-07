@@ -19,6 +19,7 @@ public class ProjectService {
     private final ProjectRepository projectRepository;
     private final CenterService centerService;
     private final TagService tagService;
+    private final UserService userService;
 
     public List<Project> getAllProjects() {
         return this.projectRepository.findAll();
@@ -36,6 +37,7 @@ public class ProjectService {
         newProject.setImgUrl(project.imgUrl());
         newProject.setTeamSize(project.teamSize());
         if(project.centerId() != null) newProject.setCenter(this.centerService.getCenterById(project.centerId()));
+        if(project.ownerId() != null) newProject.setOwner(this.userService.getUserById(project.ownerId()));
 
         if(project.tagsToBeAdded() != null) {
             for (UUID tagId : project.tagsToBeAdded()) {
@@ -59,6 +61,7 @@ public class ProjectService {
         if (updatedProject.teamSize() > 0) originalProject.setTeamSize(updatedProject.teamSize());
 
         if(updatedProject.centerId() != null) originalProject.setCenter(this.centerService.getCenterById(updatedProject.centerId()));
+        if(updatedProject.ownerId() != null) originalProject.setOwner(this.userService.getUserById(updatedProject.ownerId()));
 
         if(updatedProject.tagsToBeAdded() != null) {
             for (UUID tagId : updatedProject.tagsToBeAdded()) {

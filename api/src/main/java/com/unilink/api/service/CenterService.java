@@ -31,11 +31,11 @@ public class CenterService {
         return this.centerRepository.save(newCenter);
     }
 
-    public Center updateCenter(UUID id, CenterRequestDTO centerRequest) {
+    public Center updateCenter(UUID id, CenterRequestDTO updatedCenter) {
         Center existingCenter = this.getCenterById(id);
 
-        if(centerRequest.name() != null) existingCenter.setName(centerRequest.name());
-        if(centerRequest.centerUrl() != null) existingCenter.setCenterUrl(centerRequest.centerUrl());
+        if(updatedCenter.name() != null) existingCenter.setName(updatedCenter.name());
+        if(updatedCenter.centerUrl() != null) existingCenter.setCenterUrl(updatedCenter.centerUrl());
 
         return this.centerRepository.save(existingCenter);
     }
