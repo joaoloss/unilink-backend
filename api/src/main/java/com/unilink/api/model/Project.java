@@ -24,7 +24,6 @@ import lombok.Setter;
 @Entity
 @Table(name = "projects")
 public class Project {
-    
     @Id
     @GeneratedValue
     @Setter(lombok.AccessLevel.NONE)
@@ -33,7 +32,9 @@ public class Project {
     @Column(unique = true)
     private String name;
 
+    @Column(length = 1000)
     private String description;
+    
     private boolean openForApplications;
     private String imgUrl;
     private int teamSize;
@@ -43,7 +44,7 @@ public class Project {
     private User owner;
 
     @ManyToOne
-    @JoinColumn(name = "center_id")
+    @JoinColumn(name = "center_id", nullable = true)
     private Center center;
 
     @ManyToMany
@@ -55,12 +56,12 @@ public class Project {
     private Set<Tag> tags;
 
     public void addTag(Tag tag) {
-      tags.add(tag);
+      this.tags.add(tag);
       tag.getProjects().add(this);
     }
 
     public void removeTag(Tag tag) {
-      tags.remove(tag);
+      this.tags.remove(tag);
       tag.getProjects().remove(this);
     }
 

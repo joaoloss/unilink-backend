@@ -26,4 +26,17 @@ public class Center {
     
     private String name;
     private String centerUrl;
+
+    @Override
+    public int hashCode() {
+        return this.getClass().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || !(obj instanceof Center)) return false;
+        Center other = (Center) obj;
+        return this.id != null && this.id.equals(other.id);
+    }
 }

@@ -5,19 +5,18 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
+import com.unilink.api.DTO.TagRequestDTO;
 import com.unilink.api.exceptions.NotFoundException;
 import com.unilink.api.model.Tag;
 import com.unilink.api.repository.TagRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class TagService {
     private final TagRepository tagRepository;
 
-    public TagService(TagRepository tagRepository) {
-        this.tagRepository = tagRepository;
-    }
-
-    // Add service methods here
     public List<Tag> getAllTags() {
         return this.tagRepository.findAll();
     }
@@ -26,20 +25,21 @@ public class TagService {
         return this.tagRepository.findById(id).orElseThrow(() -> new NotFoundException("Tag not found with id: " + id));
     }
 
-    public Tag createTag(Tag tag) {
-        return this.tagRepository.save(tag);
+    public Tag createTag(TagRequestDTO tag) {
+        Tag newTag = new Tag();
+        newTag.setName(tag.name());
+        newTag.setColorHex(tag.colorHex());
+        
+        return this.tagRepository.save(newTag);
     }
 
-    public Tag updateTagName(UUID id, String name) {
-        Tag tag = this.getTagById(id);
-        tag.setName(name);
-        return this.tagRepository.save(tag);
-    }
+    public Tag updateTag(UUID id, TagRequestDTO updatedTag) {
+        Tag originalTag = this.getTagById(id);
 
-    public Tag updateTagColor(UUID id, String colorHex) {
-        Tag tag = this.getTagById(id);
-        tag.setColorHex(colorHex);
-        return this.tagRepository.save(tag);
+        if(updatedTag.name() != null) originalTag.setName(updatedTag.name());
+        if(updatedTag.colorHex() != null) originalTag.setColorHex(updatedTag.colorHex());
+    
+        return this.tagRepository.save(originalTag);
     }
 
     public void deleteTag(UUID id) {

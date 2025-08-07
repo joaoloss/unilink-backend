@@ -3,6 +3,8 @@ package com.unilink.api.model;
 import java.util.Set;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -29,14 +31,15 @@ public class Tag {
     String name;
 
     @ManyToMany(mappedBy = "tags")
+    @JsonIgnore
     Set<Project> projects;
 
     public void addProject(Project project) {
-        projects.add(project);
+        this.projects.add(project);
         project.getTags().add(this);
     }
     public void removeProject(Project project) {
-        projects.remove(project);
+        this.projects.remove(project);
         project.getTags().remove(this);
     }
 

@@ -33,4 +33,17 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     private UserRole role;
+
+    @Override
+    public int hashCode() {
+        return this.getClass().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || !(obj instanceof User)) return false;
+        User other = (User) obj;
+        return this.id != null && this.id.equals(other.id);
+    }
 }
