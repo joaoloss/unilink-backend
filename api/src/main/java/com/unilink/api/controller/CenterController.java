@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.unilink.api.DTO.CenterRequestDTO;
+import com.unilink.api.exceptions.InvalidFieldException;
 import com.unilink.api.model.Center;
 import com.unilink.api.service.CenterService;
 
@@ -37,7 +38,10 @@ public class CenterController {
 
     @PostMapping
     public ResponseEntity<Center> createCenter(@RequestBody CenterRequestDTO centerRequest) {
-        System.out.println("Creating center with request: " + centerRequest);
+        if(!centerRequest.isValidForCreation()) {
+            throw new InvalidFieldException("Invalid center data provided for creation.");
+        }
+
         return ResponseEntity.ok(this.centerService.createCenter(centerRequest));
     }
 

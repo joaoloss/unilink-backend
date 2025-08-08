@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 import com.unilink.api.DTO.CenterRequestDTO;
 import com.unilink.api.exceptions.NotFoundException;
 import com.unilink.api.model.Center;
+import com.unilink.api.model.Project;
 import com.unilink.api.repository.CenterRepository;
+import com.unilink.api.repository.ProjectRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -16,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CenterService {
     private final CenterRepository centerRepository;
+    private final ProjectRepository projectRepository;
 
     public Center getCenterById(UUID id) {
         return this.centerRepository.findById(id).orElseThrow(() -> new NotFoundException("Center not found with id: " + id));
@@ -23,7 +26,6 @@ public class CenterService {
 
     public Center createCenter(CenterRequestDTO centerRequest) {
         Center newCenter = new Center();
-        System.out.println("Creating center with request: " + centerRequest);
 
         if(centerRequest.name() != null) newCenter.setName(centerRequest.name());
         if(centerRequest.centerUrl() != null) newCenter.setCenterUrl(centerRequest.centerUrl());
@@ -42,6 +44,13 @@ public class CenterService {
 
     public void deleteCenter(UUID id) {
         Center center = this.getCenterById(id);
+
+        List<Project> projects = this.projectRepository.findByCenterId(id);
+        for (Project project : projects) {
+            project.setCenter(null);
+            this.projectRepository.save(project);
+        }
+
         this.centerRepository.delete(center);
     }
 

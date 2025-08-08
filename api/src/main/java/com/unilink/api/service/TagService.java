@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.unilink.api.DTO.TagRequestDTO;
 import com.unilink.api.exceptions.NotFoundException;
+import com.unilink.api.model.Project;
 import com.unilink.api.model.Tag;
 import com.unilink.api.repository.TagRepository;
 
@@ -44,6 +45,11 @@ public class TagService {
 
     public void deleteTag(UUID id) {
         Tag tag = this.getTagById(id);
+
+        for(Project project : tag.getProjects()) {
+            project.getTags().remove(tag);
+        }
+
         this.tagRepository.delete(tag);
     }
 }

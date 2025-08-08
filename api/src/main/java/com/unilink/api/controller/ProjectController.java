@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.unilink.api.DTO.ProjectRequestDTO;
+import com.unilink.api.exceptions.InvalidFieldException;
 import com.unilink.api.model.Project;
 import com.unilink.api.service.ProjectService;
 
@@ -37,6 +38,10 @@ public class ProjectController {
 
     @PostMapping
     public ResponseEntity<Project> createProject(@RequestBody ProjectRequestDTO projectRequest) {
+        if(!projectRequest.isValidForCreation()) {
+            throw new InvalidFieldException("Invalid project data provided for creation.");
+        }
+        
         return ResponseEntity.ok(this.projectService.createProject(projectRequest));
     }
     

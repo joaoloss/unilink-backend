@@ -13,5 +13,9 @@ public record ProjectRequestDTO(
     UUID[] tagsToBeAdded,
     UUID[] tagsToBeRemoved
 ) {
-    
+    public boolean isValidForCreation() {
+        return name != null && !name.isBlank() &&
+               description != null && !description.isBlank() &&
+               ownerId != null;
+    }
 }

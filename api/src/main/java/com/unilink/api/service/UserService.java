@@ -6,7 +6,9 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 
 import com.unilink.api.DTO.UserRequestDTO;
+import com.unilink.api.model.Project;
 import com.unilink.api.model.User;
+import com.unilink.api.repository.ProjectRepository;
 import com.unilink.api.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -15,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final ProjectRepository projectRepository;
 
     public List<User> getAllUsers() {
         return this.userRepository.findAll();
@@ -34,7 +37,15 @@ public class UserService {
     }
 
     public void deleteUser(UUID id) {
-        this.userRepository.deleteById(id);
+        User user = this.getUserById(id);
+
+        List<Project> projects = this.projectRepository.findByOwnerId(id);
+        for (Project project : projects) {
+            project.setOwner(null);
+            this.projectRepository.save(project);
+        }
+        
+        this.userRepository.delete(user);
     }
 
     public User updateUser(UUID id, UserRequestDTO updatedUser) {

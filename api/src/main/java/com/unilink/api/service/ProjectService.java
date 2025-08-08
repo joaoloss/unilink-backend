@@ -52,13 +52,13 @@ public class ProjectService {
     public Project updateProject(UUID id, ProjectRequestDTO updatedProject) {
         Project originalProject = this.getProjectById(id);
         
-        if (updatedProject.name() != null) originalProject.setName(updatedProject.name());
-        if (updatedProject.description() != null) originalProject.setDescription(updatedProject.description());
-        if (updatedProject.openForApplications() != originalProject.isOpenForApplications()) {
+        if(updatedProject.name() != null) originalProject.setName(updatedProject.name());
+        if(updatedProject.description() != null) originalProject.setDescription(updatedProject.description());
+        if(updatedProject.openForApplications() != originalProject.isOpenForApplications()) {
             originalProject.setOpenForApplications(updatedProject.openForApplications());
         }
-        if (updatedProject.imgUrl() != null) originalProject.setImgUrl(updatedProject.imgUrl());
-        if (updatedProject.teamSize() > 0) originalProject.setTeamSize(updatedProject.teamSize());
+        if(updatedProject.imgUrl() != null) originalProject.setImgUrl(updatedProject.imgUrl());
+        if(updatedProject.teamSize() > 0) originalProject.setTeamSize(updatedProject.teamSize());
 
         if(updatedProject.centerId() != null) originalProject.setCenter(this.centerService.getCenterById(updatedProject.centerId()));
         if(updatedProject.ownerId() != null) originalProject.setOwner(this.userService.getUserById(updatedProject.ownerId()));

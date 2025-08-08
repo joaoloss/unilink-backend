@@ -44,7 +44,7 @@ public class Project {
     private User owner;
 
     @ManyToOne
-    @JoinColumn(name = "center_id", nullable = true)
+    @JoinColumn(name = "center_id")
     private Center center;
 
     @ManyToMany

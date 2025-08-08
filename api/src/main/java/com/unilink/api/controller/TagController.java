@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.unilink.api.DTO.TagRequestDTO;
+import com.unilink.api.exceptions.InvalidFieldException;
 import com.unilink.api.model.Tag;
 import com.unilink.api.service.TagService;
 
@@ -38,6 +39,10 @@ public class TagController {
 
     @PostMapping
     public ResponseEntity<Tag> createTag(@RequestBody TagRequestDTO tagRequest) {
+        if(!tagRequest.isValidForCreation()) {
+            throw new InvalidFieldException("Invalid tag data provided for creation.");
+        }
+        
         return ResponseEntity.ok(this.tagService.createTag(tagRequest));
     }
 

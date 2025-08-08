@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.unilink.api.DTO.UserRequestDTO;
+import com.unilink.api.exceptions.InvalidFieldException;
 import com.unilink.api.model.User;
 import com.unilink.api.service.UserService;
 
@@ -37,6 +38,10 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<User> createUser(@RequestBody UserRequestDTO userRequest) {
+        if(!userRequest.isValidForCreation()) {
+            throw new InvalidFieldException("Invalid user data provided for creation.");
+        }
+        
         return ResponseEntity.ok(this.userService.createUser(userRequest));
     }
 
