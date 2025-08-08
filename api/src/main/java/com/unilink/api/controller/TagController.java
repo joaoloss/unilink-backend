@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.unilink.api.DTO.TagRequestDTO;
-import com.unilink.api.exceptions.InvalidFieldException;
+import com.unilink.api.dtos.TagRequestDTO;
+import com.unilink.api.exception.InvalidFieldException;
 import com.unilink.api.model.Tag;
 import com.unilink.api.service.TagService;
 

@@ -1,6 +1,6 @@
-package com.unilink.api.DTO;
+package com.unilink.api.dtos;
 
-import com.unilink.api.model.UserRole;
+import com.unilink.api.enums.UserRole;
 
 public record UserRequestDTO(
     String name,

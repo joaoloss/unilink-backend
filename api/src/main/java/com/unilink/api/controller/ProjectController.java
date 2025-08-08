@@ -13,9 +13,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.unilink.api.DTO.ProjectRequestDTO;
-import com.unilink.api.exceptions.InvalidFieldException;
+import com.unilink.api.dtos.ProjectRequestDTO;
+import com.unilink.api.exception.InvalidFieldException;
 import com.unilink.api.model.Project;
+import com.unilink.api.repository.filters.ProjectQueryFilter;
 import com.unilink.api.service.ProjectService;
 
 import lombok.RequiredArgsConstructor;
@@ -27,8 +28,8 @@ public class ProjectController {
     private final ProjectService projectService;
 
     @GetMapping
-    public ResponseEntity<List<Project>> getAllProjects() {
-        return ResponseEntity.ok(this.projectService.getAllProjects());
+    public ResponseEntity<List<Project>> getAllProjects(@RequestBody ProjectQueryFilter projectFilterSpec) {
+        return ResponseEntity.ok(this.projectService.getAllProjects(projectFilterSpec.toSpecification()));
     }
 
     @GetMapping("/{id}")

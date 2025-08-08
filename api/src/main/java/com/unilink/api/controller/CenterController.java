@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.unilink.api.DTO.CenterRequestDTO;
-import com.unilink.api.exceptions.InvalidFieldException;
+import com.unilink.api.dtos.CenterRequestDTO;
+import com.unilink.api.exception.InvalidFieldException;
 import com.unilink.api.model.Center;
 import com.unilink.api.service.CenterService;
 

@@ -1,4 +1,4 @@
-package com.unilink.api.exceptions;
+package com.unilink.api.exception;
 
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;

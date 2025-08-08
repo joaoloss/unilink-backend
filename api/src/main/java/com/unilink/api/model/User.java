@@ -9,6 +9,8 @@ import lombok.Setter;
 
 import java.util.UUID;
 
+import com.unilink.api.enums.UserRole;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;

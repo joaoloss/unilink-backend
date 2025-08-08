@@ -1,4 +1,4 @@
-package com.unilink.api.model;
+package com.unilink.api.enums;
 
 public enum UserRole {
     PROJECT_ADMIN("PROJECT_ADMIN"),

@@ -3,10 +3,12 @@ package com.unilink.api.service;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.unilink.api.DTO.ProjectRequestDTO;
-import com.unilink.api.exceptions.NotFoundException;
+import com.unilink.api.dtos.ProjectRequestDTO;
+import com.unilink.api.exception.NotFoundException;
 import com.unilink.api.model.Project;
 import com.unilink.api.model.Tag;
 import com.unilink.api.repository.ProjectRepository;
@@ -21,14 +23,15 @@ public class ProjectService {
     private final TagService tagService;
     private final UserService userService;
 
-    public List<Project> getAllProjects() {
-        return this.projectRepository.findAll();
+    public List<Project> getAllProjects(Specification<Project> filterSpecification) {
+        return this.projectRepository.findAll(filterSpecification);
     }
 
     public Project getProjectById(UUID id) {
         return this.projectRepository.findById(id).orElseThrow(() -> new NotFoundException("Project not found with id: " + id));
     }
 
+    @Transactional
     public Project createProject(ProjectRequestDTO project) {
         Project newProject = new Project();
         newProject.setName(project.name());
@@ -49,6 +52,7 @@ public class ProjectService {
         return this.projectRepository.save(newProject);
     }
     
+    @Transactional
     public Project updateProject(UUID id, ProjectRequestDTO updatedProject) {
         Project originalProject = this.getProjectById(id);
         
@@ -80,12 +84,14 @@ public class ProjectService {
         return this.projectRepository.save(originalProject);
     } 
 
+    @Transactional
     public void addTagToProject(UUID projectId, Tag tag) {
         Project project = this.getProjectById(projectId);
         project.addTag(tag);
         this.projectRepository.save(project);
     }
 
+    @Transactional
     public void removeTagFromProject(UUID projectId, Tag tag) {
         Project project = this.getProjectById(projectId);
         project.getTags().remove(tag);
@@ -93,6 +99,7 @@ public class ProjectService {
         this.projectRepository.save(project);
     }
 
+    @Transactional
     public void deleteProject(UUID id) {
         Project project = this.getProjectById(id);
         this.projectRepository.delete(project);

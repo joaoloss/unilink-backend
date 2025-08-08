@@ -4,9 +4,10 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.unilink.api.DTO.TagRequestDTO;
-import com.unilink.api.exceptions.NotFoundException;
+import com.unilink.api.dtos.TagRequestDTO;
+import com.unilink.api.exception.NotFoundException;
 import com.unilink.api.model.Project;
 import com.unilink.api.model.Tag;
 import com.unilink.api.repository.TagRepository;
@@ -26,6 +27,7 @@ public class TagService {
         return this.tagRepository.findById(id).orElseThrow(() -> new NotFoundException("Tag not found with id: " + id));
     }
 
+    @Transactional
     public Tag createTag(TagRequestDTO tag) {
         Tag newTag = new Tag();
         newTag.setName(tag.name());
@@ -34,6 +36,7 @@ public class TagService {
         return this.tagRepository.save(newTag);
     }
 
+    @Transactional
     public Tag updateTag(UUID id, TagRequestDTO updatedTag) {
         Tag originalTag = this.getTagById(id);
 
@@ -43,6 +46,7 @@ public class TagService {
         return this.tagRepository.save(originalTag);
     }
 
+    @Transactional
     public void deleteTag(UUID id) {
         Tag tag = this.getTagById(id);
 

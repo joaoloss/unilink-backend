@@ -4,8 +4,9 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.unilink.api.DTO.UserRequestDTO;
+import com.unilink.api.dtos.UserRequestDTO;
 import com.unilink.api.model.Project;
 import com.unilink.api.model.User;
 import com.unilink.api.repository.ProjectRepository;
@@ -27,6 +28,7 @@ public class UserService {
         return this.userRepository.findById(id).orElse(null);
     }
 
+    @Transactional
     public User createUser(UserRequestDTO userRequest) {
         User newUser = new User();
         newUser.setName(userRequest.name());
@@ -36,6 +38,7 @@ public class UserService {
         return this.userRepository.save(newUser);
     }
 
+    @Transactional
     public void deleteUser(UUID id) {
         User user = this.getUserById(id);
 
@@ -48,6 +51,7 @@ public class UserService {
         this.userRepository.delete(user);
     }
 
+    @Transactional
     public User updateUser(UUID id, UserRequestDTO updatedUser) {
         User existingUser = this.getUserById(id);
 

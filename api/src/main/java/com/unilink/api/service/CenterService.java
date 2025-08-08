@@ -4,9 +4,10 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.unilink.api.DTO.CenterRequestDTO;
-import com.unilink.api.exceptions.NotFoundException;
+import com.unilink.api.dtos.CenterRequestDTO;
+import com.unilink.api.exception.NotFoundException;
 import com.unilink.api.model.Center;
 import com.unilink.api.model.Project;
 import com.unilink.api.repository.CenterRepository;
@@ -24,6 +25,7 @@ public class CenterService {
         return this.centerRepository.findById(id).orElseThrow(() -> new NotFoundException("Center not found with id: " + id));
     }
 
+    @Transactional
     public Center createCenter(CenterRequestDTO centerRequest) {
         Center newCenter = new Center();
 
@@ -33,6 +35,7 @@ public class CenterService {
         return this.centerRepository.save(newCenter);
     }
 
+    @Transactional
     public Center updateCenter(UUID id, CenterRequestDTO updatedCenter) {
         Center existingCenter = this.getCenterById(id);
 
@@ -42,6 +45,7 @@ public class CenterService {
         return this.centerRepository.save(existingCenter);
     }
 
+    @Transactional
     public void deleteCenter(UUID id) {
         Center center = this.getCenterById(id);
 

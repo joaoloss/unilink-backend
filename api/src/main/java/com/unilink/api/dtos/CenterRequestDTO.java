@@ -1,4 +1,4 @@
-package com.unilink.api.DTO;
+package com.unilink.api.dtos;
 
 public record CenterRequestDTO(
     String name,

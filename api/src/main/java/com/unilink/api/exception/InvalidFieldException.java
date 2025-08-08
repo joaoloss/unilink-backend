@@ -1,4 +1,4 @@
-package com.unilink.api.exceptions;
+package com.unilink.api.exception;
 
 public class InvalidFieldException extends RuntimeException {
     public InvalidFieldException(String message) {
