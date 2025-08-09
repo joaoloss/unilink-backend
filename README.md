@@ -8,7 +8,7 @@ Este repositório contempla o backend da aplicação. O repositório do frontend
 
 ## Diagrama UML
 
-![UML](imgs/uml.png)
+![UML](imgs/unilink_uml.png)
 
 
 ## Ferramentas escolhidas
