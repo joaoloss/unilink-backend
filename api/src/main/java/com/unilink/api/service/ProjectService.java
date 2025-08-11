@@ -24,7 +24,6 @@ public class ProjectService {
     private final UserService userService;
 
     public List<Project> getAllProjects(Specification<Project> filterSpecification) {
-        System.out.println(filterSpecification);
         return this.projectRepository.findAll(filterSpecification);
     }
 

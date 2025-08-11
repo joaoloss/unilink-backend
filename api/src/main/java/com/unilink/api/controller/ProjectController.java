@@ -28,7 +28,8 @@ public class ProjectController {
     private final ProjectService projectService;
 
     @GetMapping
-    public ResponseEntity<List<Project>> getAllProjects(@RequestBody ProjectQueryFilter projectFilterSpec) {
+    public ResponseEntity<List<Project>> getAllProjects(@RequestBody(required = false) ProjectQueryFilter projectFilterSpec) {
+        if(projectFilterSpec == null) return ResponseEntity.ok(this.projectService.getAllProjects(null));
         return ResponseEntity.ok(this.projectService.getAllProjects(projectFilterSpec.toSpecification()));
     }
 

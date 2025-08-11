@@ -11,6 +11,7 @@ import java.util.UUID;
 
 import com.unilink.api.enums.UserRole;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -30,7 +31,10 @@ public class User {
     private UUID id;
 
     private String name;
+
+    @Column(unique = true)
     private String email;
+    
     private String password;
 
     @Enumerated(EnumType.STRING)
