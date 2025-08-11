@@ -12,6 +12,9 @@ import com.unilink.api.model.User;
 import com.unilink.api.repository.ProjectRepository;
 import com.unilink.api.repository.UserRepository;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -19,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 public class UserService {
     private final UserRepository userRepository;
     private final ProjectRepository projectRepository;
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public List<User> getAllUsers() {
         return this.userRepository.findAll();
@@ -28,12 +32,23 @@ public class UserService {
         return this.userRepository.findById(id).orElse(null);
     }
 
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email).orElse(null);
+    }
+
     @Transactional
     public User createUser(UserRequestDTO userRequest) {
         User newUser = new User();
         newUser.setName(userRequest.name());
         newUser.setEmail(userRequest.email());
-        newUser.setPassword(userRequest.password());
+
+        System.out.println("request password" + userRequest.password());
+
+        String criptoPassword = passwordEncoder.encode(userRequest.password());
+        newUser.setPassword(criptoPassword);
+
+        System.out.println("cripto password" + criptoPassword);
+
         newUser.setRole(userRequest.role());
         return this.userRepository.save(newUser);
     }
