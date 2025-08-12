@@ -41,15 +41,9 @@ public class UserService {
         User newUser = new User();
         newUser.setName(userRequest.name());
         newUser.setEmail(userRequest.email());
-
-        System.out.println("request password" + userRequest.password());
-
-        String criptoPassword = passwordEncoder.encode(userRequest.password());
-        newUser.setPassword(criptoPassword);
-
-        System.out.println("cripto password" + criptoPassword);
-
+        newUser.setPassword(passwordEncoder.encode(userRequest.password()));
         newUser.setRole(userRequest.role());
+
         return this.userRepository.save(newUser);
     }
 
