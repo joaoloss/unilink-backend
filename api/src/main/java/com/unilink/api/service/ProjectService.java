@@ -48,6 +48,17 @@ public class ProjectService {
         if(project.centerId() != null) newProject.setCenter(this.centerService.getCenterById(project.centerId()));
         if(project.ownerId() != null) newProject.setOwner(this.userService.getUserById(project.ownerId()));
 
+        // Processar imagem base64 se fornecida
+        if (project.hasImageData()) {
+            String fileName = project.imageFileName() != null ? project.imageFileName() : "project-image";
+            String imageUrl = r2StorageService.uploadBase64(
+                project.imageBase64(),
+                fileName,
+                project.imageContentType()
+            );
+            newProject.setImgUrl(imageUrl);
+        }
+
         if(project.tagsToBeAdded() != null) {
             for (UUID tagId : project.tagsToBeAdded()) {
                 Tag tag = this.tagService.getTagById(tagId);
@@ -96,6 +107,22 @@ public class ProjectService {
         if(updatedProject.imgUrl() != null) originalProject.setImgUrl(updatedProject.imgUrl());
         if(updatedProject.teamSize() > 0) originalProject.setTeamSize(updatedProject.teamSize());
 
+        // Processar imagem base64 se fornecida
+        if (updatedProject.hasImageData()) {
+            // Remove a imagem anterior se existir
+            if (originalProject.getImgUrl() != null) {
+                r2StorageService.deleteByUrl(originalProject.getImgUrl());
+            }
+            
+            String fileName = updatedProject.imageFileName() != null ? updatedProject.imageFileName() : "project-image";
+            String imageUrl = r2StorageService.uploadBase64(
+                updatedProject.imageBase64(),
+                fileName,
+                updatedProject.imageContentType()
+            );
+            originalProject.setImgUrl(imageUrl);
+        }
+
         if(updatedProject.centerId() != null) originalProject.setCenter(this.centerService.getCenterById(updatedProject.centerId()));
         if(updatedProject.ownerId() != null) originalProject.setOwner(this.userService.getUserById(updatedProject.ownerId()));
 
@@ -114,21 +141,6 @@ public class ProjectService {
         }
 
         return this.projectRepository.save(originalProject);
-    }
-
-    @Transactional
-    public Project updateProjectImage(UUID projectId, String imageUrl) {
-        Project project = this.getProjectById(projectId);
-        
-        if(!this.hasUpdateAccess(project)) throw new AccessDeniedException();
-        
-        // Remove a imagem anterior se existir
-        if (project.getImgUrl() != null) {
-            r2StorageService.deleteByUrl(project.getImgUrl());
-        }
-        
-        project.setImgUrl(imageUrl);
-        return this.projectRepository.save(project);
     }
 
     @Transactional
