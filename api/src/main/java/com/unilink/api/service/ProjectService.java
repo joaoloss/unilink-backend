@@ -27,6 +27,7 @@ public class ProjectService {
     private final CenterService centerService;
     private final TagService tagService;
     private final UserService userService;
+    private final R2StorageService r2StorageService;
 
     public List<Project> getAllProjects(Specification<Project> filterSpecification) {
         return this.projectRepository.findAll(filterSpecification);
@@ -113,11 +114,32 @@ public class ProjectService {
         }
 
         return this.projectRepository.save(originalProject);
-    } 
+    }
+
+    @Transactional
+    public Project updateProjectImage(UUID projectId, String imageUrl) {
+        Project project = this.getProjectById(projectId);
+        
+        if(!this.hasUpdateAccess(project)) throw new AccessDeniedException();
+        
+        // Remove a imagem anterior se existir
+        if (project.getImgUrl() != null) {
+            r2StorageService.deleteByUrl(project.getImgUrl());
+        }
+        
+        project.setImgUrl(imageUrl);
+        return this.projectRepository.save(project);
+    }
 
     @Transactional
     public void deleteProject(UUID id) {
         Project project = this.getProjectById(id);
+        
+        // Remove a imagem do projeto se existir
+        if (project.getImgUrl() != null) {
+            r2StorageService.deleteByUrl(project.getImgUrl());
+        }
+        
         this.projectRepository.delete(project);
     }
 }

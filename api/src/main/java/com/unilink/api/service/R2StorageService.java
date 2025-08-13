@@ -3,6 +3,7 @@ package com.unilink.api.service;
 import java.io.InputStream;
 import java.net.URLConnection;
 import java.time.Instant;
+import java.util.Base64;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,12 +46,33 @@ public class R2StorageService {
         return String.format("%s/%s", r2PublicBaseUrl, key);
     }
 
+    public String uploadBase64(String base64Data, String fileName, String contentType) {
+        byte[] imageBytes = Base64.getDecoder().decode(base64Data);
+        String key = buildObjectKey(fileName);
+        
+        PutObjectRequest putRequest = PutObjectRequest.builder()
+                .bucket(r2BucketName)
+                .key(key)
+                .contentType(contentType)
+                .build();
+
+        r2S3Client.putObject(putRequest, RequestBody.fromBytes(imageBytes));
+        return String.format("%s/%s", r2PublicBaseUrl, key);
+    }
+
     public void delete(String key) {
         DeleteObjectRequest deleteRequest = DeleteObjectRequest.builder()
                 .bucket(r2BucketName)
                 .key(key)
                 .build();
         r2S3Client.deleteObject(deleteRequest);
+    }
+
+    public void deleteByUrl(String imageUrl) {
+        if (imageUrl != null && imageUrl.startsWith(r2PublicBaseUrl)) {
+            String key = imageUrl.substring(r2PublicBaseUrl.length() + 1); // +1 para remover a "/"
+            delete(key);
+        }
     }
 
     public String getPublicUrl(String key) {
@@ -71,5 +93,3 @@ public class R2StorageService {
         return guessed != null ? guessed : "application/octet-stream";
     }
 }
-
-

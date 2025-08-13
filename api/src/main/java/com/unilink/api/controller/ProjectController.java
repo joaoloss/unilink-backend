@@ -13,11 +13,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.unilink.api.dtos.ImageUploadDTO;
 import com.unilink.api.dtos.ProjectRequestDTO;
 import com.unilink.api.exception.InvalidFieldException;
 import com.unilink.api.model.Project;
 import com.unilink.api.repository.filters.ProjectQueryFilter;
 import com.unilink.api.service.ProjectService;
+import com.unilink.api.service.R2StorageService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -35,6 +37,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 @Tag(name = "Projetos", description = "Endpoints para gerenciamento de projetos")
 public class ProjectController {
     private final ProjectService projectService;
+    private final R2StorageService r2StorageService;
 
     @GetMapping
     @Operation(
@@ -146,6 +149,78 @@ public class ProjectController {
         return this.projectService.updateProject(id, updatedProject);
     }
 
+    @PostMapping("/{id}/image")
+    @Operation(
+        summary = "Upload de imagem do projeto",
+        description = "Faz upload de uma imagem em Base64 para o projeto especificado"
+    )
+    @ApiResponses(value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Imagem enviada com sucesso",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = Project.class)
+            )
+        ),
+        @ApiResponse(
+            responseCode = "400",
+            description = "Dados de imagem inválidos"
+        ),
+        @ApiResponse(
+            responseCode = "404",
+            description = "Projeto não encontrado"
+        )
+    })
+    public ResponseEntity<Project> uploadProjectImage(
+        @Parameter(description = "ID único do projeto", required = true)
+        @PathVariable UUID id,
+        @RequestBody 
+        @Schema(description = "Dados da imagem em Base64", requiredMode = Schema.RequiredMode.REQUIRED)
+        ImageUploadDTO imageUpload
+    ) {
+        if (!imageUpload.isValidBase64()) {
+            throw new InvalidFieldException("Dados de imagem inválidos");
+        }
+
+        String fileName = imageUpload.fileName() != null ? imageUpload.fileName() : "project-image";
+        String imageUrl = r2StorageService.uploadBase64(
+            imageUpload.getBase64Data(),
+            fileName,
+            imageUpload.getContentType()
+        );
+
+        Project updatedProject = projectService.updateProjectImage(id, imageUrl);
+        return ResponseEntity.ok(updatedProject);
+    }
+
+    @DeleteMapping("/{id}/image")
+    @Operation(
+        summary = "Remover imagem do projeto",
+        description = "Remove a imagem atual do projeto especificado"
+    )
+    @ApiResponses(value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Imagem removida com sucesso",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = Project.class)
+            )
+        ),
+        @ApiResponse(
+            responseCode = "404",
+            description = "Projeto não encontrado"
+        )
+    })
+    public ResponseEntity<Project> removeProjectImage(
+        @Parameter(description = "ID único do projeto", required = true)
+        @PathVariable UUID id
+    ) {
+        Project updatedProject = projectService.updateProjectImage(id, null);
+        return ResponseEntity.ok(updatedProject);
+    }
+
     @DeleteMapping("/{id}")
     @Operation(
         summary = "Excluir projeto",
@@ -168,4 +243,4 @@ public class ProjectController {
         this.projectService.deleteProject(id);
         return ResponseEntity.noContent().build();
     }
-}   
+}
