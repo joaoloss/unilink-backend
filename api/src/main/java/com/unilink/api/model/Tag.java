@@ -3,8 +3,10 @@ package com.unilink.api.model;
 import java.util.Set;
 import java.util.UUID;
 
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -28,6 +30,8 @@ public class Tag {
     UUID id;
 
     String colorHex;
+
+    @Column(unique = true)
     String name;
 
     @ManyToMany(mappedBy = "tags")

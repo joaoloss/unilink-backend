@@ -2,6 +2,7 @@ package com.unilink.api.model;
 
 import java.util.UUID;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -24,7 +25,10 @@ public class Center {
     @Setter(lombok.AccessLevel.NONE)
     private UUID id;
     
+    @Column(unique = true)
     private String name;
+
+    @Column(unique = true)
     private String centerUrl;
 
     @Override
