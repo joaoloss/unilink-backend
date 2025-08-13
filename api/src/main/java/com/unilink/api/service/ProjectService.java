@@ -77,7 +77,7 @@ public class ProjectService {
                 currentUserId = (String) principal;
             }
         } else return false;
-        
+
         return isSuperAdmin || (project.getOwner() != null && project.getOwner().getId().toString().equals(currentUserId));
     }
     

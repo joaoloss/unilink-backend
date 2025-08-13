@@ -25,7 +25,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         String role = user.getRole().name(); // ex.: "SUPER_ADMIN"
 
         return org.springframework.security.core.userdetails.User
-                .withUsername(user.getEmail())
+                .withUsername(user.getId().toString())
                 .password(user.getPassword()) // já codificada (BCrypt etc.)
                 .roles(role)                    // adiciona prefixo ROLE_ automaticamente
                 .build();

@@ -7,13 +7,16 @@ import com.unilink.api.model.Project;
 import com.unilink.api.model.Tag;
 import com.unilink.api.model.User;
 import com.unilink.api.repository.ProjectRepository;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -77,8 +80,8 @@ class ProjectServiceTest {
     }
 
     @Test
-    @DisplayName("Should update a project successfully")
-    void updateProjectSuccess() {
+    @DisplayName("Should update a project successfully because the user is the project owner")
+    void updateProjectSuccessByProjectOwner() {
         UUID projectId = UUID.randomUUID();
         UUID ownerId = UUID.randomUUID();
 
@@ -123,6 +126,62 @@ class ProjectServiceTest {
         assertEquals(result.getName(), dto.name());
         assertEquals(result.getDescription(), dto.description());
         verify(projectRepository).save(original);
+        verify(tagService, times(4)).getTagById(any());
+    }
+
+    @Test
+    @DisplayName("Should update a project successfully because the user has super admin role")
+    void updateProjectSuccessBySuperAdmin() {
+        UUID projectId = UUID.randomUUID();
+        UUID ownerId = UUID.randomUUID();
+        UUID currentUserId = UUID.randomUUID();
+
+        UUID idTagAdd1 = UUID.randomUUID(); UUID idTagAdd2 = UUID.randomUUID();
+        UUID[] tagsAddIds = {idTagAdd1, idTagAdd2};
+
+        UUID idTagRemove1 = UUID.randomUUID(); UUID idTagRemove2 = UUID.randomUUID();
+        UUID[] tagsRemoveIds = {idTagRemove1, idTagRemove2};
+
+        UserDetails userDetails = mock(UserDetails.class);
+        when(userDetails.getUsername()).thenReturn(currentUserId.toString()); // Pode ser qualquer id
+        doReturn(List.of(new SimpleGrantedAuthority("ROLE_SUPER_ADMIN"))).when(userDetails).getAuthorities();
+
+        SecurityContext securityContext = mock(SecurityContext.class);
+        Authentication authentication = mock(Authentication.class);
+        when(authentication.getPrincipal()).thenReturn(userDetails);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        SecurityContextHolder.setContext(securityContext);
+        when(authentication.isAuthenticated()).thenReturn(true);
+
+        ProjectRequestDTO dto = mock(ProjectRequestDTO.class);
+        when(dto.name()).thenReturn("NewName");
+        when(dto.description()).thenReturn("NewDesc");
+        when(dto.tagsToBeAdded()).thenReturn(tagsAddIds);
+        when(dto.tagsToBeRemoved()).thenReturn(tagsRemoveIds);
+
+        User owner = mock(User.class);
+        when(owner.getId()).thenReturn(ownerId);
+
+        Project original = spy(new Project(projectId, "OldName", "OldDesc", false, null, 0, owner, null, new HashSet<Tag>()));
+        when(original.isOpenForApplications()).thenReturn(true);
+
+        when(projectRepository.findById(projectId)).thenReturn(Optional.of(original));
+        
+        Tag tagAdd1 = new Tag(); Tag tagAdd2 = new Tag();
+        Tag tagRemove1 = new Tag(); Tag tagRemove2 = new Tag();
+        when(tagService.getTagById(idTagAdd1)).thenReturn(tagAdd1); when(tagService.getTagById(idTagAdd2)).thenReturn(tagAdd2); 
+        when(tagService.getTagById(idTagRemove1)).thenReturn(tagRemove1); when(tagService.getTagById(idTagRemove2)).thenReturn(tagRemove2);
+        doNothing().when(original).addTag(any());
+        doNothing().when(original).removeTag(any());
+
+        when(projectRepository.save(any(Project.class))).thenReturn(original);
+
+        Project result = projectService.updateProject(projectId, dto);
+
+        assertEquals(result.getName(), dto.name());
+        assertEquals(result.getDescription(), dto.description());
+        verify(projectRepository).save(original);
+        verify(userDetails).getAuthorities();
         verify(tagService, times(4)).getTagById(any());
     }
 }
