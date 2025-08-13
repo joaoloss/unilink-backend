@@ -4,10 +4,15 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.unilink.api.dtos.ProjectRequestDTO;
+import com.unilink.api.exception.AccessDeniedException;
 import com.unilink.api.exception.NotFoundException;
 import com.unilink.api.model.Project;
 import com.unilink.api.model.Tag;
@@ -51,10 +56,36 @@ public class ProjectService {
 
         return this.projectRepository.save(newProject);
     }
+
+    private boolean hasUpdateAccess(Project project) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUserId = null;
+        boolean isSuperAdmin = false;
+
+        if (authentication != null && authentication.isAuthenticated()) {
+            Object principal = authentication.getPrincipal();
+
+            if (principal instanceof UserDetails) {
+                currentUserId = ((UserDetails) principal).getUsername();
+                for (GrantedAuthority auth : ((UserDetails) principal).getAuthorities()) {
+                    if ("ROLE_SUPER_ADMIN".equals(auth.getAuthority())) {
+                        isSuperAdmin = true;
+                        break;
+                    }
+                }
+            } else if (principal instanceof String) {
+                currentUserId = (String) principal;
+            }
+        } else return false;
+        
+        return isSuperAdmin || (project.getOwner() != null && project.getOwner().getId().toString().equals(currentUserId));
+    }
     
     @Transactional
     public Project updateProject(UUID id, ProjectRequestDTO updatedProject) {
         Project originalProject = this.getProjectById(id);
+
+        if(!this.hasUpdateAccess(originalProject)) throw new AccessDeniedException();
         
         if(updatedProject.name() != null) originalProject.setName(updatedProject.name());
         if(updatedProject.description() != null) originalProject.setDescription(updatedProject.description());
@@ -83,21 +114,6 @@ public class ProjectService {
 
         return this.projectRepository.save(originalProject);
     } 
-
-    @Transactional
-    public void addTagToProject(UUID projectId, Tag tag) {
-        Project project = this.getProjectById(projectId);
-        project.addTag(tag);
-        this.projectRepository.save(project);
-    }
-
-    @Transactional
-    public void removeTagFromProject(UUID projectId, Tag tag) {
-        Project project = this.getProjectById(projectId);
-        project.getTags().remove(tag);
-        tag.getProjects().remove(project);
-        this.projectRepository.save(project);
-    }
 
     @Transactional
     public void deleteProject(UUID id) {

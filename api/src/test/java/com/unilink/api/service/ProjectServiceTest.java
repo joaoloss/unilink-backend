@@ -2,7 +2,7 @@ package com.unilink.api.service;
 
 import com.unilink.api.dtos.ProjectRequestDTO;
 import com.unilink.api.exception.NotFoundException;
-import com.unilink.api.model.Center;
+import com.unilink.api.exception.AccessDeniedException;
 import com.unilink.api.model.Project;
 import com.unilink.api.model.Tag;
 import com.unilink.api.model.User;
@@ -11,13 +11,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.Authentication;
 
 import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
-
-
-
 
 class ProjectServiceTest {
 
@@ -48,10 +49,37 @@ class ProjectServiceTest {
     }
 
     @Test
+    @DisplayName("Should not update project due to because the user isn't the project owner")
+    void updateProjectAccessDeniedException() {
+        UUID projectId = UUID.randomUUID();
+        UUID ownerId = UUID.randomUUID();
+        UUID currentUserId = UUID.randomUUID();
+
+        SecurityContext securityContext = mock(SecurityContext.class);
+        Authentication authentication = mock(Authentication.class);
+        when(authentication.getPrincipal()).thenReturn(currentUserId.toString());
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        SecurityContextHolder.setContext(securityContext);
+        when(authentication.isAuthenticated()).thenReturn(true);
+
+        ProjectRequestDTO dto = mock(ProjectRequestDTO.class);
+        when(dto.name()).thenReturn("NewName");
+
+        User owner = mock(User.class);
+        when(owner.getId()).thenReturn(ownerId);
+
+        Project original = spy(new Project(projectId, "OldName", null, false, null, 0, owner, null, null));
+
+        when(projectRepository.findById(projectId)).thenReturn(Optional.of(original));
+        when(projectRepository.save(any(Project.class))).thenReturn(original);
+
+        assertThrows(AccessDeniedException.class, () -> projectService.updateProject(projectId, dto));
+    }
+
+    @Test
     @DisplayName("Should update a project successfully")
     void updateProjectSuccess() {
-        UUID id = UUID.randomUUID();
-        UUID centerId = UUID.randomUUID();
+        UUID projectId = UUID.randomUUID();
         UUID ownerId = UUID.randomUUID();
 
         UUID idTagAdd1 = UUID.randomUUID(); UUID idTagAdd2 = UUID.randomUUID();
@@ -60,61 +88,41 @@ class ProjectServiceTest {
         UUID idTagRemove1 = UUID.randomUUID(); UUID idTagRemove2 = UUID.randomUUID();
         UUID[] tagsRemoveIds = {idTagRemove1, idTagRemove2};
 
+        SecurityContext securityContext = mock(SecurityContext.class);
+        Authentication authentication = mock(Authentication.class);
+        when(authentication.getPrincipal()).thenReturn(ownerId.toString());
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        SecurityContextHolder.setContext(securityContext);
+        when(authentication.isAuthenticated()).thenReturn(true);
+
         ProjectRequestDTO dto = mock(ProjectRequestDTO.class);
-        when(dto.name()).thenReturn("Updated");
-        when(dto.description()).thenReturn("UpdatedDesc");
-        when(dto.openForApplications()).thenReturn(false);
-        when(dto.imgUrl()).thenReturn("updatedImg");
-        when(dto.teamSize()).thenReturn(10);
-        when(dto.centerId()).thenReturn(centerId);
-        when(dto.ownerId()).thenReturn(ownerId);
+        when(dto.name()).thenReturn("NewName");
+        when(dto.description()).thenReturn("NewDesc");
         when(dto.tagsToBeAdded()).thenReturn(tagsAddIds);
         when(dto.tagsToBeRemoved()).thenReturn(tagsRemoveIds);
 
-        Project original = mock();
-        original.setOpenForApplications(true);
-        when(projectRepository.findById(id)).thenReturn(Optional.of(original));
-        when(centerService.getCenterById(centerId)).thenReturn(new Center());
-        when(userService.getUserById(ownerId)).thenReturn(new User());
+        User owner = mock(User.class);
+        when(owner.getId()).thenReturn(ownerId);
+
+        Project original = spy(new Project(projectId, "OldName", "OldDesc", false, null, 0, owner, null, new HashSet<Tag>()));
+        when(original.isOpenForApplications()).thenReturn(true);
+
+        when(projectRepository.findById(projectId)).thenReturn(Optional.of(original));
         
         Tag tagAdd1 = new Tag(); Tag tagAdd2 = new Tag();
         Tag tagRemove1 = new Tag(); Tag tagRemove2 = new Tag();
         when(tagService.getTagById(idTagAdd1)).thenReturn(tagAdd1); when(tagService.getTagById(idTagAdd2)).thenReturn(tagAdd2); 
         when(tagService.getTagById(idTagRemove1)).thenReturn(tagRemove1); when(tagService.getTagById(idTagRemove2)).thenReturn(tagRemove2);
         doNothing().when(original).addTag(any());
+        doNothing().when(original).removeTag(any());
 
-        Project saved = new Project();
-        when(projectRepository.save(any(Project.class))).thenReturn(saved);
+        when(projectRepository.save(any(Project.class))).thenReturn(original);
 
-        Project result = projectService.updateProject(id, dto);
+        Project result = projectService.updateProject(projectId, dto);
 
-        assertEquals(saved, result);
+        assertEquals(result.getName(), dto.name());
+        assertEquals(result.getDescription(), dto.description());
         verify(projectRepository).save(original);
-        verify(centerService).getCenterById(centerId);
-        verify(userService).getUserById(ownerId);
         verify(tagService, times(4)).getTagById(any());
-    }
-
-    @Test
-    @DisplayName("Should remove a tag from project successfully")
-    void removeTagFromProjectSuccess() {
-        UUID projectId = UUID.randomUUID();
-        Tag tag = mock();
-        Project project = mock();
-        Set<Tag> tags = new HashSet<>();
-        tags.add(tag);
-        project.setTags(tags);
-        Set<Project> projects = new HashSet<>();
-        projects.add(project);
-        tag.setProjects(projects);
-
-        when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
-        when(projectRepository.save(project)).thenReturn(project);
-
-        projectService.removeTagFromProject(projectId, tag);
-
-        assertFalse(project.getTags().contains(tag));
-        assertFalse(tag.getProjects().contains(project));
-        verify(projectRepository).save(project);
     }
 }
