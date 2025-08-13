@@ -21,25 +21,95 @@ import com.unilink.api.service.ProjectService;
 
 import lombok.RequiredArgsConstructor;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Parameter;
+
 @RestController
 @RequestMapping("/api/projects")
 @RequiredArgsConstructor
+@Tag(name = "Projetos", description = "Endpoints para gerenciamento de projetos")
 public class ProjectController {
     private final ProjectService projectService;
 
     @GetMapping
-    public ResponseEntity<List<Project>> getAllProjects(@RequestBody(required = false) ProjectQueryFilter projectFilterSpec) {
+    @Operation(
+        summary = "Listar projetos",
+        description = "Retorna uma lista de projetos. Pode ser filtrada usando ProjectQueryFilter no body da requisição"
+    )
+    @ApiResponses(value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Lista de projetos retornada com sucesso",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = Project.class)
+            )
+        )
+    })
+    public ResponseEntity<List<Project>> getAllProjects(
+        @RequestBody(required = false) 
+        @Schema(description = "Filtros opcionais para buscar projetos")
+        ProjectQueryFilter projectFilterSpec
+    ) {
         if(projectFilterSpec == null) return ResponseEntity.ok(this.projectService.getAllProjects(null));
         return ResponseEntity.ok(this.projectService.getAllProjects(projectFilterSpec.toSpecification()));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Project> getProjectById(@PathVariable UUID id) {
+    @Operation(
+        summary = "Buscar projeto por ID",
+        description = "Retorna um projeto específico baseado no ID fornecido"
+    )
+    @ApiResponses(value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Projeto encontrado com sucesso",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = Project.class)
+            )
+        ),
+        @ApiResponse(
+            responseCode = "404",
+            description = "Projeto não encontrado"
+        )
+    })
+    public ResponseEntity<Project> getProjectById(
+        @Parameter(description = "ID único do projeto", required = true)
+        @PathVariable UUID id
+    ) {
         return ResponseEntity.ok(this.projectService.getProjectById(id));
     }
 
     @PostMapping
-    public ResponseEntity<Project> createProject(@RequestBody ProjectRequestDTO projectRequest) {
+    @Operation(
+        summary = "Criar novo projeto",
+        description = "Cria um novo projeto no sistema com os dados fornecidos"
+    )
+    @ApiResponses(value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Projeto criado com sucesso",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = Project.class)
+            )
+        ),
+        @ApiResponse(
+            responseCode = "400",
+            description = "Dados inválidos fornecidos"
+        )
+    })
+    public ResponseEntity<Project> createProject(
+        @RequestBody 
+        @Schema(description = "Dados do projeto para criação", requiredMode = Schema.RequiredMode.REQUIRED)
+        ProjectRequestDTO projectRequest
+    ) {
         if(!projectRequest.isValidForCreation()) {
             throw new InvalidFieldException("Invalid project data provided for creation.");
         }
@@ -48,12 +118,53 @@ public class ProjectController {
     }
     
     @PutMapping("/{id}")
-    public Project updateProject(@PathVariable UUID id, @RequestBody ProjectRequestDTO updatedProject) {
+    @Operation(
+        summary = "Atualizar projeto",
+        description = "Atualiza os dados de um projeto existente baseado no ID fornecido"
+    )
+    @ApiResponses(value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Projeto atualizado com sucesso",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = Project.class)
+            )
+        ),
+        @ApiResponse(
+            responseCode = "404",
+            description = "Projeto não encontrado"
+        )
+    })
+    public Project updateProject(
+        @Parameter(description = "ID único do projeto", required = true)
+        @PathVariable UUID id, 
+        @RequestBody 
+        @Schema(description = "Dados atualizados do projeto", requiredMode = Schema.RequiredMode.REQUIRED)
+        ProjectRequestDTO updatedProject
+    ) {
         return this.projectService.updateProject(id, updatedProject);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProject(@PathVariable UUID id) {
+    @Operation(
+        summary = "Excluir projeto",
+        description = "Remove um projeto do sistema baseado no ID fornecido"
+    )
+    @ApiResponses(value = {
+        @ApiResponse(
+            responseCode = "204",
+            description = "Projeto excluído com sucesso"
+        ),
+        @ApiResponse(
+            responseCode = "404",
+            description = "Projeto não encontrado"
+        )
+    })
+    public ResponseEntity<Void> deleteProject(
+        @Parameter(description = "ID único do projeto", required = true)
+        @PathVariable UUID id
+    ) {
         this.projectService.deleteProject(id);
         return ResponseEntity.noContent().build();
     }
