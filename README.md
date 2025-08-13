@@ -17,27 +17,24 @@ Este repositório contempla o backend da aplicação. O repositório do frontend
 - **Testes**: JUnit e Mockito
 - **Versionamento**: Git e Github
 - **Virtualização e portabilidade**: Docker
-- **Geração de documentação**: JavaDoc
+- **Geração de documentação**: Swagger
 
 ## Execução
 
-Para clonar e acessar o repositório, execute os seguintes comandos no terminal:
+Para clonar e acessar o repositório contendo a API, execute os seguintes comandos no terminal:
 ```bash
 git clone https://github.com/joaoloss/unilink-backend.git
-cd unilink-backend
+cd unilink-backend/api/
 ```
 
-Para iniciar a API, execute o seguinte comando:
+Para iniciar a API localmente, execute o seguinte comando:
 ```bash
 ./mvnw spring-boot:run
 ```
 
-## Gerar documentação
+## Documentação
 
-Para gerar a documentação do projeto, execute o seguinte comando no terminal:
-```bash
-./mvnw javadoc:javadoc
-```
+Para acessar a documentação do projeto, inicie a API e acesse http://localhost:8080/swagger-ui/index.html
 
 ## Desenvolvedores
 * [Conrado Antoniazi dos Santos](https://github.com/ConradoAntoniazi)
