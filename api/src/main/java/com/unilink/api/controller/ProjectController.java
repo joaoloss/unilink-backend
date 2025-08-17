@@ -89,7 +89,7 @@ public class ProjectController {
     @PostMapping
     @Operation(
         summary = "Criar novo projeto",
-        description = "Cria um novo projeto no sistema com os dados fornecidos"
+        description = "Cria um novo projeto no sistema com os dados fornecidos. Suporta upload de imagem em Base64."
     )
     @ApiResponses(value = {
         @ApiResponse(
@@ -120,7 +120,7 @@ public class ProjectController {
     @PutMapping("/{id}")
     @Operation(
         summary = "Atualizar projeto",
-        description = "Atualiza os dados de um projeto existente baseado no ID fornecido"
+        description = "Atualiza os dados de um projeto existente baseado no ID fornecido. Suporta upload de imagem em Base64."
     )
     @ApiResponses(value = {
         @ApiResponse(
@@ -168,4 +168,4 @@ public class ProjectController {
         this.projectService.deleteProject(id);
         return ResponseEntity.noContent().build();
     }
-}   
+}

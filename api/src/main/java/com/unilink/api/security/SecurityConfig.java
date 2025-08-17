@@ -64,7 +64,6 @@ public class SecurityConfig {
         return new ProviderManager(authProvider);
     }
 
-    
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration cors = new CorsConfiguration();

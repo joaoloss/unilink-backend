@@ -22,11 +22,19 @@ public record ProjectRequestDTO(
     @Schema(description = "Array de IDs das tags a serem adicionadas ao projeto")
     UUID[] tagsToBeAdded,
     @Schema(description = "Array de IDs das tags a serem removidas do projeto")
-    UUID[] tagsToBeRemoved
+    UUID[] tagsToBeRemoved,
+    @Schema(description = "Dados da imagem em Base64 (opcional)")
+    String imageBase64,
+    @Schema(description = "Tipo de conteúdo da imagem (opcional, ex: image/jpeg)")
+    String imageContentType
 ) {
     public boolean isValidForCreation() {
         return name != null && !name.isBlank() &&
                description != null && !description.isBlank() &&
                ownerId != null;
+    }
+    
+    public boolean hasImageData() {
+        return imageBase64 != null && !imageBase64.isBlank();
     }
 }
