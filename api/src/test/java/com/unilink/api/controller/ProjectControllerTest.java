@@ -28,7 +28,7 @@ public class ProjectControllerTest {
     @Test
     @DisplayName("Should throw InvalidFieldException due to empty OwnerId")
     void testGetUserByEmailFound() {
-        ProjectRequestDTO dto = new ProjectRequestDTO("TestName", "TestDesc", null, null, false, null, 0, null, null, null, null, null);
+        ProjectRequestDTO dto = new ProjectRequestDTO("TestName", "TestDesc", null, null, false, null, 0, null, null, null, null);
         assertThrows(InvalidFieldException.class, () -> projectController.createProject(dto));
     }    
 }

@@ -25,8 +25,6 @@ public record ProjectRequestDTO(
     UUID[] tagsToBeRemoved,
     @Schema(description = "Dados da imagem em Base64 (opcional)")
     String imageBase64,
-    @Schema(description = "Nome do arquivo da imagem (opcional)")
-    String imageFileName,
     @Schema(description = "Tipo de conteúdo da imagem (opcional, ex: image/jpeg)")
     String imageContentType
 ) {

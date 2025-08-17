@@ -43,20 +43,20 @@ public class ProjectService {
         newProject.setName(project.name());
         newProject.setDescription(project.description());
         newProject.setOpenForApplications(project.openForApplications());
-        newProject.setImgUrl(project.imgUrl());
         newProject.setTeamSize(project.teamSize());
         if(project.centerId() != null) newProject.setCenter(this.centerService.getCenterById(project.centerId()));
         if(project.ownerId() != null) newProject.setOwner(this.userService.getUserById(project.ownerId()));
 
-        // Processar imagem base64 se fornecida
+        // Processar imagem base64 se fornecida (prioridade sobre imgUrl)
         if (project.hasImageData()) {
-            String fileName = project.imageFileName() != null ? project.imageFileName() : "project-image";
-            String imageUrl = r2StorageService.uploadBase64(
+            String imageUrl = r2StorageService.uploadFromUri(
                 project.imageBase64(),
-                fileName,
                 project.imageContentType()
             );
             newProject.setImgUrl(imageUrl);
+        } else if (project.imgUrl() != null) {
+            // Usar imgUrl apenas se não houver imageBase64
+            newProject.setImgUrl(project.imgUrl());
         }
 
         if(project.tagsToBeAdded() != null) {
@@ -104,23 +104,23 @@ public class ProjectService {
         if(updatedProject.openForApplications() != originalProject.isOpenForApplications()) {
             originalProject.setOpenForApplications(updatedProject.openForApplications());
         }
-        if(updatedProject.imgUrl() != null) originalProject.setImgUrl(updatedProject.imgUrl());
         if(updatedProject.teamSize() > 0) originalProject.setTeamSize(updatedProject.teamSize());
 
-        // Processar imagem base64 se fornecida
+        // Processar imagem base64 se fornecida (prioridade sobre imgUrl)
         if (updatedProject.hasImageData()) {
             // Remove a imagem anterior se existir
             if (originalProject.getImgUrl() != null) {
                 r2StorageService.deleteByUrl(originalProject.getImgUrl());
             }
             
-            String fileName = updatedProject.imageFileName() != null ? updatedProject.imageFileName() : "project-image";
-            String imageUrl = r2StorageService.uploadBase64(
+            String imageUrl = r2StorageService.uploadFromUri(
                 updatedProject.imageBase64(),
-                fileName,
                 updatedProject.imageContentType()
             );
             originalProject.setImgUrl(imageUrl);
+        } else if (updatedProject.imgUrl() != null) {
+            // Usar imgUrl apenas se não houver imageBase64
+            originalProject.setImgUrl(updatedProject.imgUrl());
         }
 
         if(updatedProject.centerId() != null) originalProject.setCenter(this.centerService.getCenterById(updatedProject.centerId()));
