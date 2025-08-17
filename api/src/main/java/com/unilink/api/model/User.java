@@ -9,6 +9,7 @@ import lombok.Setter;
 
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.unilink.api.enums.UserRole;
 
 import jakarta.persistence.Column;
@@ -35,9 +36,11 @@ public class User {
     @Column(unique = true)
     private String email;
     
+    @JsonIgnore
     private String password;
 
     @Enumerated(EnumType.STRING)
+    @JsonIgnore
     private UserRole role;
 
     @Override

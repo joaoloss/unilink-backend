@@ -15,7 +15,7 @@ import jakarta.persistence.criteria.Subquery;
 
 public class ProjectSpec {
     public static Specification<Project> containsName(String name) {
-        return (root, _, criteriaBuilder) -> {
+        return (root, query, criteriaBuilder) -> {
             if (ObjectUtils.isEmpty(name)) {
                 return null;
             }
@@ -24,7 +24,7 @@ public class ProjectSpec {
     }
 
     public static Specification<Project> hasCenterId(UUID centerId) {
-        return (root, _, criteriaBuilder) -> {
+        return (root, query, criteriaBuilder) -> {
             if (ObjectUtils.isEmpty(centerId)) {
                 return null;
             }
@@ -52,7 +52,7 @@ public class ProjectSpec {
     }
 
     public static Specification<Project> isOpenForApplications(Boolean openForApplications) {
-        return (root, _, criteriaBuilder) -> {
+        return (root, query, criteriaBuilder) -> {
             if (ObjectUtils.isEmpty(openForApplications)) {
                 return null;
             }
@@ -61,7 +61,7 @@ public class ProjectSpec {
     }
 
     public static Specification<Project> teamSizeLessThanOrEqualTo(Integer teamSize) {
-        return (root, _, criteriaBuilder) -> {
+        return (root, query, criteriaBuilder) -> {
             if (ObjectUtils.isEmpty(teamSize)) {
                 return null;
             }
@@ -70,7 +70,7 @@ public class ProjectSpec {
     }
 
     public static Specification<Project> teamSizeGreaterThanOrEqualTo(Integer teamSize) {
-        return (root, _, criteriaBuilder) -> {
+        return (root, query, criteriaBuilder) -> {
             if (ObjectUtils.isEmpty(teamSize)) {
                 return null;
             }
