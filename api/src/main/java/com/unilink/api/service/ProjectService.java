@@ -1,5 +1,6 @@
 package com.unilink.api.service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
@@ -46,6 +47,7 @@ public class ProjectService {
         newProject.setTeamSize(project.teamSize());
         if(project.centerId() != null) newProject.setCenter(this.centerService.getCenterById(project.centerId()));
         if(project.ownerId() != null) newProject.setOwner(this.userService.getUserById(project.ownerId()));
+        newProject.setTags(new HashSet<>());
 
         // Processar imagem base64 se fornecida (prioridade sobre imgUrl)
         if (project.hasImageData()) {
