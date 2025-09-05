@@ -1,7 +1,6 @@
 package com.unilink.api.service;
 
 import java.io.InputStream;
-import java.net.URLConnection;
 import java.util.Base64;
 import java.util.UUID;
 
@@ -59,7 +58,7 @@ public class R2StorageService {
     }
 
     public String uploadFromUri(String uriWithBase64, String contentType) {
-        // Extrai o base64 da URI (assumindo formato: data:image/jpeg;base64,/9j/4AAQ...)
+        // Extract base64 from URI (assumed format: data:image/jpeg;base64,/9j/4AAQ...)
         String base64Data = extractBase64FromUri(uriWithBase64);
         return uploadBase64(base64Data, contentType);
     }
@@ -74,7 +73,7 @@ public class R2StorageService {
 
     public void deleteByUrl(String imageUrl) {
         if (imageUrl != null && imageUrl.startsWith(r2PublicBaseUrl)) {
-            String key = imageUrl.substring(r2PublicBaseUrl.length() + 1); // +1 para remover a "/"
+            String key = imageUrl.substring(r2PublicBaseUrl.length() + 1); // +1 to remove "/"
             delete(key);
         }
     }
@@ -89,15 +88,15 @@ public class R2StorageService {
 
     private String extractBase64FromUri(String uriWithBase64) {
         if (uriWithBase64 == null || uriWithBase64.isEmpty()) {
-            throw new IllegalArgumentException("URI não pode ser nula ou vazia");
+            throw new IllegalArgumentException("URI cannot be null or empty");
         }
         
-        // Procura por "base64," na URI e extrai o conteúdo após
+        // Look for "base64," in the URI and extract the content after it
         int base64Index = uriWithBase64.indexOf("base64,");
         if (base64Index == -1) {
-            throw new IllegalArgumentException("URI não contém dados base64 válidos");
+            throw new IllegalArgumentException("URI does not contain valid base64 data");
         }
         
-        return uriWithBase64.substring(base64Index + 7); // +7 para pular "base64,"
+        return uriWithBase64.substring(base64Index + 7); // +7 to skip "base64,"
     }
 }

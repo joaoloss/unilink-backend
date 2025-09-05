@@ -10,15 +10,15 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/api/test")
-@Tag(name = "Teste", description = "Endpoints de teste")
+@Tag(name = "Test", description = "Test endpoints")
 public class TestController {
 
     @GetMapping
     @Operation(
-        summary = "Teste de conectividade",
-        description = "Endpoint simples para testar se a API está funcionando"
+        summary = "Connectivity test",
+        description = "Simple endpoint to check if the API is running"
     )
     public ResponseEntity<String> test() {
-        return ResponseEntity.ok("API está funcionando!");
+        return ResponseEntity.ok("API is working!");
     }
 }

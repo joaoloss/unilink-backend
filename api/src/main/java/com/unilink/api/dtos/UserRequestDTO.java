@@ -3,15 +3,18 @@ package com.unilink.api.dtos;
 import com.unilink.api.enums.UserRole;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-@Schema(description = "DTO para requisições de usuário")
+@Schema(description = "DTO for user requests")
 public record UserRequestDTO(
-    @Schema(description = "Nome completo do usuário", example = "João Silva")
+    @Schema(description = "Full name of the user", example = "John Silva")
     String name,
-    @Schema(description = "Email do usuário", example = "joao.silva@email.com")
+
+    @Schema(description = "User email", example = "john.silva@email.com")
     String email,
-    @Schema(description = "Senha do usuário", example = "senha123")
+
+    @Schema(description = "User password", example = "password123")
     String password,
-    @Schema(description = "Papel/função do usuário no sistema")
+
+    @Schema(description = "Role/function of the user in the system")
     UserRole role
 ) {
     public boolean isValidForCreation() {

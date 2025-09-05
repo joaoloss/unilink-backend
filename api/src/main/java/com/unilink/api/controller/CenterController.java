@@ -31,19 +31,19 @@ import io.swagger.v3.oas.annotations.Parameter;
 @RestController
 @RequestMapping("/api/centers")
 @RequiredArgsConstructor
-@Tag(name = "Centros", description = "Endpoints para gerenciamento de centros")
+@Tag(name = "Centers", description = "Endpoints for center management")
 public class CenterController {
     private final CenterService centerService;
 
     @GetMapping
     @Operation(
-        summary = "Listar todos os centros",
-        description = "Retorna uma lista com todos os centros cadastrados no sistema"
+        summary = "List all centers",
+        description = "Returns a list of all centers registered in the system"
     )
     @ApiResponses(value = {
         @ApiResponse(
             responseCode = "200",
-            description = "Lista de centros retornada com sucesso",
+            description = "List of centers successfully returned",
             content = @Content(
                 mediaType = "application/json",
                 schema = @Schema(implementation = Center.class)
@@ -56,13 +56,13 @@ public class CenterController {
 
     @GetMapping("/{id}")
     @Operation(
-        summary = "Buscar centro por ID",
-        description = "Retorna um centro específico baseado no ID fornecido"
+        summary = "Get center by ID",
+        description = "Returns a specific center based on the provided ID"
     )
     @ApiResponses(value = {
         @ApiResponse(
             responseCode = "200",
-            description = "Centro encontrado com sucesso",
+            description = "Center successfully found",
             content = @Content(
                 mediaType = "application/json",
                 schema = @Schema(implementation = Center.class)
@@ -70,11 +70,11 @@ public class CenterController {
         ),
         @ApiResponse(
             responseCode = "404",
-            description = "Centro não encontrado"
+            description = "Center not found"
         )
     })
     public ResponseEntity<Center> getCenterById(
-        @Parameter(description = "ID único do centro", required = true)
+        @Parameter(description = "Unique ID of the center", required = true)
         @PathVariable UUID id
     ) {
         return ResponseEntity.ok(this.centerService.getCenterById(id));
@@ -82,13 +82,13 @@ public class CenterController {
 
     @PostMapping
     @Operation(
-        summary = "Criar novo centro",
-        description = "Cria um novo centro no sistema com os dados fornecidos"
+        summary = "Create new center",
+        description = "Creates a new center in the system with the provided data"
     )
     @ApiResponses(value = {
         @ApiResponse(
             responseCode = "200",
-            description = "Centro criado com sucesso",
+            description = "Center successfully created",
             content = @Content(
                 mediaType = "application/json",
                 schema = @Schema(implementation = Center.class)
@@ -96,12 +96,12 @@ public class CenterController {
         ),
         @ApiResponse(
             responseCode = "400",
-            description = "Dados inválidos fornecidos"
+            description = "Invalid data provided"
         )
     })
     public ResponseEntity<Center> createCenter(
         @RequestBody 
-        @Schema(description = "Dados do centro para criação", requiredMode = Schema.RequiredMode.REQUIRED)
+        @Schema(description = "Data of the center to be created", requiredMode = Schema.RequiredMode.REQUIRED)
         CenterRequestDTO centerRequest
     ) {
         if(!centerRequest.isValidForCreation()) {
@@ -113,13 +113,13 @@ public class CenterController {
 
     @PutMapping("/{id}")
     @Operation(
-        summary = "Atualizar centro",
-        description = "Atualiza os dados de um centro existente baseado no ID fornecido"
+        summary = "Update center",
+        description = "Updates the data of an existing center based on the provided ID"
     )
     @ApiResponses(value = {
         @ApiResponse(
             responseCode = "200",
-            description = "Centro atualizado com sucesso",
+            description = "Center successfully updated",
             content = @Content(
                 mediaType = "application/json",
                 schema = @Schema(implementation = Center.class)
@@ -127,14 +127,14 @@ public class CenterController {
         ),
         @ApiResponse(
             responseCode = "404",
-            description = "Centro não encontrado"
+            description = "Center not found"
         )
     })
     public ResponseEntity<Center> updateCenter(
-        @Parameter(description = "ID único do centro", required = true)
+        @Parameter(description = "Unique ID of the center", required = true)
         @PathVariable UUID id, 
         @RequestBody 
-        @Schema(description = "Dados atualizados do centro", requiredMode = Schema.RequiredMode.REQUIRED)
+        @Schema(description = "Updated center data", requiredMode = Schema.RequiredMode.REQUIRED)
         CenterRequestDTO updatedCenter
     ) {
         return ResponseEntity.ok(this.centerService.updateCenter(id, updatedCenter));
@@ -142,21 +142,21 @@ public class CenterController {
 
     @DeleteMapping("/{id}")
     @Operation(
-        summary = "Excluir centro",
-        description = "Remove um centro do sistema baseado no ID fornecido"
+        summary = "Delete center",
+        description = "Removes a center from the system based on the provided ID"
     )
     @ApiResponses(value = {
         @ApiResponse(
             responseCode = "204",
-            description = "Centro excluído com sucesso"
+            description = "Center successfully deleted"
         ),
         @ApiResponse(
             responseCode = "404",
-            description = "Centro não encontrado"
+            description = "Center not found"
         )
     })
     public ResponseEntity<Void> deleteCenter(
-        @Parameter(description = "ID único do centro", required = true)
+        @Parameter(description = "Unique ID of the center", required = true)
         @PathVariable UUID id
     ) {
         this.centerService.deleteCenter(id);

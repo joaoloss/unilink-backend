@@ -2,11 +2,11 @@ package com.unilink.api.dtos;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
-@Schema(description = "DTO para requisições de centro")
+@Schema(description = "DTO for center requests")
 public record CenterRequestDTO(
-    @Schema(description = "Nome do centro", example = "Centro de Tecnologia")
+    @Schema(description = "Center name", example = "Technology Center")
     String name,
-    @Schema(description = "URL do centro", example = "https://centro-tecnologia.com")
+    @Schema(description = "Center URL", example = "https://technology-center.com")
     String centerUrl
 ) {
     public boolean isValidForCreation() {

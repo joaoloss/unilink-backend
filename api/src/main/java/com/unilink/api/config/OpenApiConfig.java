@@ -17,7 +17,7 @@ public class OpenApiConfig {
         return new OpenAPI()
                 .info(new Info()
                         .title("Unilink API")
-                        .description("API para gerenciamento de projetos e usuários do sistema Unilink")
+                        .description("API for managing projects and users of the Unilink system")
                         .version("1.0.0")
                         .license(new License()
                                 .name("MIT License")
@@ -25,7 +25,7 @@ public class OpenApiConfig {
                 .servers(List.of(
                         new Server()
                                 .url("http://localhost:8080")
-                                .description("Servidor de Desenvolvimento")
+                                .description("Development Server")
                 ));
     }
 }

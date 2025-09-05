@@ -3,29 +3,39 @@ package com.unilink.api.dtos;
 import java.util.UUID;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-@Schema(description = "DTO para requisições de projeto")
+@Schema(description = "DTO for project requests")
 public record ProjectRequestDTO(
-    @Schema(description = "Nome do projeto", example = "Sistema de Gestão Escolar")
+    @Schema(description = "Project name", example = "School Management System")
     String name,
-    @Schema(description = "Descrição detalhada do projeto", example = "Sistema completo para gerenciamento de escolas")
+
+    @Schema(description = "Detailed description of the project", example = "A complete system for managing schools")
     String description,
-    @Schema(description = "ID do centro responsável pelo projeto")
+
+    @Schema(description = "ID of the center responsible for the project")
     UUID centerId,
-    @Schema(description = "ID do usuário proprietário do projeto")
+
+    @Schema(description = "ID of the user who owns the project")
     UUID ownerId,
-    @Schema(description = "Indica se o projeto está aberto para aplicações", example = "true")
+
+    @Schema(description = "Indicates whether the project is open for applications", example = "true")
     boolean openForApplications,
-    @Schema(description = "URL da imagem do projeto", example = "https://example.com/project-image.jpg")
+
+    @Schema(description = "Project image URL", example = "https://example.com/project-image.jpg")
     String imgUrl,
-    @Schema(description = "Tamanho da equipe do projeto", example = "5")
+
+    @Schema(description = "Project team size", example = "5")
     int teamSize,
-    @Schema(description = "Array de IDs das tags a serem adicionadas ao projeto")
+
+    @Schema(description = "Array of tag IDs to be added to the project")
     UUID[] tagsToBeAdded,
-    @Schema(description = "Array de IDs das tags a serem removidas do projeto")
+
+    @Schema(description = "Array of tag IDs to be removed from the project")
     UUID[] tagsToBeRemoved,
-    @Schema(description = "Dados da imagem em Base64 (opcional)")
+
+    @Schema(description = "Image data in Base64 (optional)")
     String imageBase64,
-    @Schema(description = "Tipo de conteúdo da imagem (opcional, ex: image/jpeg)")
+
+    @Schema(description = "Image content type (optional, e.g., image/jpeg)")
     String imageContentType
 ) {
     public boolean isValidForCreation() {

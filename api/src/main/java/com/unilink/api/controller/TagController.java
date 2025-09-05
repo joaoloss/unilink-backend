@@ -30,20 +30,20 @@ import io.swagger.v3.oas.annotations.Parameter;
 @RestController
 @RequestMapping("/api/tags")
 @RequiredArgsConstructor
-@io.swagger.v3.oas.annotations.tags.Tag(name = "Tags", description = "Endpoints para gerenciamento de tags")
+@io.swagger.v3.oas.annotations.tags.Tag(name = "Tags", description = "Endpoints for tag management")
 public class TagController {
     
     private final TagService tagService;
 
     @GetMapping
     @Operation(
-        summary = "Listar todas as tags",
-        description = "Retorna uma lista com todas as tags cadastradas no sistema"
+        summary = "List all tags",
+        description = "Returns a list of all tags registered in the system"
     )
     @ApiResponses(value = {
         @ApiResponse(
             responseCode = "200",
-            description = "Lista de tags retornada com sucesso",
+            description = "List of tags successfully returned",
             content = @Content(
                 mediaType = "application/json",
                 schema = @Schema(implementation = Tag.class)
@@ -56,13 +56,13 @@ public class TagController {
 
     @GetMapping("/{id}")
     @Operation(
-        summary = "Buscar tag por ID",
-        description = "Retorna uma tag específica baseada no ID fornecido"
+        summary = "Get tag by ID",
+        description = "Returns a specific tag based on the provided ID"
     )
     @ApiResponses(value = {
         @ApiResponse(
             responseCode = "200",
-            description = "Tag encontrada com sucesso",
+            description = "Tag successfully found",
             content = @Content(
                 mediaType = "application/json",
                 schema = @Schema(implementation = Tag.class)
@@ -70,11 +70,11 @@ public class TagController {
         ),
         @ApiResponse(
             responseCode = "404",
-            description = "Tag não encontrada"
+            description = "Tag not found"
         )
     })
     public ResponseEntity<Tag> getTagById(
-        @Parameter(description = "ID único da tag", required = true)
+        @Parameter(description = "Unique ID of the tag", required = true)
         @PathVariable UUID id
     ) {
         return ResponseEntity.ok(this.tagService.getTagById(id));
@@ -82,13 +82,13 @@ public class TagController {
 
     @PostMapping
     @Operation(
-        summary = "Criar nova tag",
-        description = "Cria uma nova tag no sistema com os dados fornecidos"
+        summary = "Create new tag",
+        description = "Creates a new tag in the system with the provided data"
     )
     @ApiResponses(value = {
         @ApiResponse(
             responseCode = "200",
-            description = "Tag criada com sucesso",
+            description = "Tag successfully created",
             content = @Content(
                 mediaType = "application/json",
                 schema = @Schema(implementation = Tag.class)
@@ -96,12 +96,12 @@ public class TagController {
         ),
         @ApiResponse(
             responseCode = "400",
-            description = "Dados inválidos fornecidos"
+            description = "Invalid data provided"
         )
     })
     public ResponseEntity<Tag> createTag(
         @RequestBody 
-        @Schema(description = "Dados da tag para criação", requiredMode = Schema.RequiredMode.REQUIRED)
+        @Schema(description = "Tag data for creation", requiredMode = Schema.RequiredMode.REQUIRED)
         TagRequestDTO tagRequest
     ) {
         if(!tagRequest.isValidForCreation()) {
@@ -113,13 +113,13 @@ public class TagController {
 
     @PutMapping("/{id}")
     @Operation(
-        summary = "Atualizar tag",
-        description = "Atualiza os dados de uma tag existente baseada no ID fornecido"
+        summary = "Update tag",
+        description = "Updates the data of an existing tag based on the provided ID"
     )
     @ApiResponses(value = {
         @ApiResponse(
             responseCode = "200",
-            description = "Tag atualizada com sucesso",
+            description = "Tag successfully updated",
             content = @Content(
                 mediaType = "application/json",
                 schema = @Schema(implementation = Tag.class)
@@ -127,14 +127,14 @@ public class TagController {
         ),
         @ApiResponse(
             responseCode = "404",
-            description = "Tag não encontrada"
+            description = "Tag not found"
         )
     })
     public ResponseEntity<Tag> updateTag(
-        @Parameter(description = "ID único da tag", required = true)
+        @Parameter(description = "Unique ID of the tag", required = true)
         @PathVariable UUID id, 
         @RequestBody 
-        @Schema(description = "Dados atualizados da tag", requiredMode = Schema.RequiredMode.REQUIRED)
+        @Schema(description = "Updated tag data", requiredMode = Schema.RequiredMode.REQUIRED)
         TagRequestDTO updatedTag
     ) {
         return ResponseEntity.ok(this.tagService.updateTag(id, updatedTag));
@@ -142,21 +142,21 @@ public class TagController {
 
     @DeleteMapping("/{id}")
     @Operation(
-        summary = "Excluir tag",
-        description = "Remove uma tag do sistema baseada no ID fornecido"
+        summary = "Delete tag",
+        description = "Removes a tag from the system based on the provided ID"
     )
     @ApiResponses(value = {
         @ApiResponse(
             responseCode = "204",
-            description = "Tag excluída com sucesso"
+            description = "Tag successfully deleted"
         ),
         @ApiResponse(
             responseCode = "404",
-            description = "Tag não encontrada"
+            description = "Tag not found"
         )
     })
     public ResponseEntity<Void> deleteTag(
-        @Parameter(description = "ID único da tag", required = true)
+        @Parameter(description = "Unique ID of the tag", required = true)
         @PathVariable UUID id
     ) {
         this.tagService.deleteTag(id);

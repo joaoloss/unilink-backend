@@ -29,37 +29,37 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
-@Tag(name = "Autenticação", description = "Endpoints para autenticação de usuários")
+@Tag(name = "Authentication", description = "Endpoints for user authentication")
 public class AuthController {
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private final UserService userService;
 
     @PostMapping("/login")
     @Operation(
-        summary = "Realizar login",
-        description = "Autentica um usuário com email e senha, retornando um token JWT"
+        summary = "Perform login",
+        description = "Authenticates a user with email and password, returning a JWT token"
     )
     @ApiResponses(value = {
         @ApiResponse(
             responseCode = "200",
-            description = "Login realizado com sucesso",
+            description = "Login successful",
             content = @Content(
                 mediaType = "application/json",
                 schema = @Schema(implementation = Map.class),
                 examples = @ExampleObject(
-                    name = "Login bem-sucedido",
+                    name = "Successful login",
                     value = "{\"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\"}"
                 )
             )
         ),
         @ApiResponse(
             responseCode = "401",
-            description = "Credenciais inválidas",
+            description = "Invalid credentials",
             content = @Content(
                 mediaType = "application/json",
                 schema = @Schema(implementation = String.class),
                 examples = @ExampleObject(
-                    name = "Erro de autenticação",
+                    name = "Authentication error",
                     value = "\"Login failed\""
                 )
             )
@@ -67,7 +67,7 @@ public class AuthController {
     })
     public ResponseEntity<?> login(
         @RequestBody 
-        @Schema(description = "Dados de login do usuário", requiredMode = Schema.RequiredMode.REQUIRED)
+        @Schema(description = "User login data", requiredMode = Schema.RequiredMode.REQUIRED)
         UserRequestDTO userRequestDTO
     ) {
         User user = userService.getUserByEmail(userRequestDTO.email());

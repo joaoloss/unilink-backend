@@ -31,19 +31,19 @@ import io.swagger.v3.oas.annotations.Parameter;
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
-@Tag(name = "Usuários", description = "Endpoints para gerenciamento de usuários")
+@Tag(name = "Users", description = "Endpoints for user management")
 public class UserController {
     private final UserService userService;
 
     @GetMapping
     @Operation(
-        summary = "Listar todos os usuários",
-        description = "Retorna uma lista com todos os usuários cadastrados no sistema"
+        summary = "List all users",
+        description = "Returns a list of all users registered in the system"
     )
     @ApiResponses(value = {
         @ApiResponse(
             responseCode = "200",
-            description = "Lista de usuários retornada com sucesso",
+            description = "List of users returned successfully",
             content = @Content(
                 mediaType = "application/json",
                 schema = @Schema(implementation = User.class)
@@ -56,13 +56,13 @@ public class UserController {
 
     @GetMapping("/{id}")
     @Operation(
-        summary = "Buscar usuário por ID",
-        description = "Retorna um usuário específico baseado no ID fornecido"
+        summary = "Get user by ID",
+        description = "Returns a specific user based on the provided ID"
     )
     @ApiResponses(value = {
         @ApiResponse(
             responseCode = "200",
-            description = "Usuário encontrado com sucesso",
+            description = "User found successfully",
             content = @Content(
                 mediaType = "application/json",
                 schema = @Schema(implementation = User.class)
@@ -70,11 +70,11 @@ public class UserController {
         ),
         @ApiResponse(
             responseCode = "404",
-            description = "Usuário não encontrado"
+            description = "User not found"
         )
     })
     public ResponseEntity<User> getUserById(
-        @Parameter(description = "ID único do usuário", required = true)
+        @Parameter(description = "Unique ID of the user", required = true)
         @PathVariable UUID id
     ) {
         return ResponseEntity.ok(this.userService.getUserById(id));
@@ -82,13 +82,13 @@ public class UserController {
 
     @PostMapping
     @Operation(
-        summary = "Criar novo usuário",
-        description = "Cria um novo usuário no sistema com os dados fornecidos"
+        summary = "Create new user",
+        description = "Creates a new user in the system with the provided data"
     )
     @ApiResponses(value = {
         @ApiResponse(
             responseCode = "200",
-            description = "Usuário criado com sucesso",
+            description = "User created successfully",
             content = @Content(
                 mediaType = "application/json",
                 schema = @Schema(implementation = User.class)
@@ -96,12 +96,12 @@ public class UserController {
         ),
         @ApiResponse(
             responseCode = "400",
-            description = "Dados inválidos fornecidos"
+            description = "Invalid data provided"
         )
     })
     public ResponseEntity<User> createUser(
         @RequestBody 
-        @Schema(description = "Dados do usuário para criação", requiredMode = Schema.RequiredMode.REQUIRED)
+        @Schema(description = "User data for creation", requiredMode = Schema.RequiredMode.REQUIRED)
         UserRequestDTO userRequest
     ) {
         if(!userRequest.isValidForCreation()) {
@@ -113,13 +113,13 @@ public class UserController {
 
     @PutMapping("/{id}")
     @Operation(
-        summary = "Atualizar usuário",
-        description = "Atualiza os dados de um usuário existente baseado no ID fornecido"
+        summary = "Update user",
+        description = "Updates the data of an existing user based on the provided ID"
     )
     @ApiResponses(value = {
         @ApiResponse(
             responseCode = "200",
-            description = "Usuário atualizado com sucesso",
+            description = "User updated successfully",
             content = @Content(
                 mediaType = "application/json",
                 schema = @Schema(implementation = User.class)
@@ -127,14 +127,14 @@ public class UserController {
         ),
         @ApiResponse(
             responseCode = "404",
-            description = "Usuário não encontrado"
+            description = "User not found"
         )
     })
     public ResponseEntity<User> updateUser(
-        @Parameter(description = "ID único do usuário", required = true)
+        @Parameter(description = "Unique ID of the user", required = true)
         @PathVariable UUID id, 
         @RequestBody 
-        @Schema(description = "Dados atualizados do usuário", requiredMode = Schema.RequiredMode.REQUIRED)
+        @Schema(description = "Updated user data", requiredMode = Schema.RequiredMode.REQUIRED)
         UserRequestDTO updatedUser
     ) {
         return ResponseEntity.ok(this.userService.updateUser(id, updatedUser));
@@ -142,21 +142,21 @@ public class UserController {
 
     @DeleteMapping("/{id}")
     @Operation(
-        summary = "Excluir usuário",
-        description = "Remove um usuário do sistema baseado no ID fornecido"
+        summary = "Delete user",
+        description = "Removes a user from the system based on the provided ID"
     )
     @ApiResponses(value = {
         @ApiResponse(
             responseCode = "204",
-            description = "Usuário excluído com sucesso"
+            description = "User deleted successfully"
         ),
         @ApiResponse(
             responseCode = "404",
-            description = "Usuário não encontrado"
+            description = "User not found"
         )
     })
     public ResponseEntity<Void> deleteUser(
-        @Parameter(description = "ID único do usuário", required = true)
+        @Parameter(description = "Unique ID of the user", required = true)
         @PathVariable UUID id
     ) {
         this.userService.deleteUser(id);
