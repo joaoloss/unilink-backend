@@ -95,8 +95,26 @@ docker run --env-file .env -p 8080:8080 unilink-api:1.0
 ```
 
 <h2 id="routes">📍 API Endpoints</h2>
+
+Main route for final users:
+
+| Route               | Description                                 | Required permissions         
+|---------------------|---------------------------------------------|---------------
+| <kbd>GET /api/projects</kbd>     | Retrieves a list of projects   | None
+
+Optional request body for filters:
+```json
+{
+  "name": "project name",             // Partial or full match on project name
+  "teamSizeGTE": 10,                  // Inclusive lower bound for team size
+  "teamSizeLTE": 35,                  // Inclusive upper bound for team size
+  "centerId": "center-uuid",          // Filter projects belonging to a specific center
+  "openForApplications": true,        // If true, only return projects currently open for applications
+  "tagIds": ["uuid1", "uuid2"]        // Return only projects that contain all of these tags
+}
+```
 ​
-To view a detailed description of the API endpoints, start the application and open the following URL in your browser to access the Swagger documentation.
+To view a detailed description of all API endpoints, start the application and open the following URL in your browser to access the Swagger documentation.
 
 ```
 http://localhost:8080/swagger-ui.html
