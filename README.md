@@ -1,42 +1,141 @@
-# UNILINK
-## Descrição
-O UniLink foi desenvolvido com o objetivo de centralizar e divulgar os projetos de extensão da UFES - Goiabeiras, tornando mais fácil para os estudantes descobrirem e conhecerem as iniciativas disponíveis.
-A plataforma oferece uma visualização simples e intuitiva de todos os projetos, com possibilidade de buscar por nome, filtrar por centro de ensino, verificar quais estão com inscrições abertas e explorar projetos por tags — palavras-chave que identificam o nicho ou característica principal de cada projeto (como tecnologia, saúde, educação, entre outros).
-O foco é proporcionar uma forma rápida e acessível para que os alunos encontrem informações essenciais sobre os projetos e possam participar ativamente das oportunidades oferecidas.
 
-Este repositório contempla o backend da aplicação. O repositório do frontend está disponível [aqui](https://github.com/raphaelitos/unilink-frontend).
+<h1 align="center" style="font-weight: bold;">UniLink 💻</h1>
 
-## Diagrama UML
+<p align="center">
+ <a href="#tech">Technologies</a> • 
+ <a href="#structure">Folders structure</a> • 
+ <a href="#started">Getting Started</a> • 
+ <a href="#routes">API Endpoints</a> •
+ <a href="#uml">UML Class</a> •
+ <a href="#user_roles">User roles</a> •
+ <a href="#colab">Collaborators</a>
+</p>
 
-![UML](imgs/unilink_uml.png)
+<p align="center">
+    <b>This repo contains the backend of UniLink, a plataform that provides a centralized, simple, and intuitive view of all extracurricular projects offered by a university.</b>
+</p>
 
+<h2 id="technologies">💻 Technologies</h2>
 
-## Ferramentas escolhidas
-- **Framework Backend**: Spring Boot
+- **Framework Backend**: Spring Boot - Java 17
+- **Database**: Postgres
+- **Image Storage**: R2 bucket
 - **Building**: Maven
-- **Testes**: JUnit e Mockito
-- **Versionamento**: Git e Github
-- **Virtualização e portabilidade**: Docker
-- **Geração de documentação**: Swagger
+- **Tests**: JUnit e Mockito
+- **Authentication**: JWT
+- **Version control**: Git/Github
+- **Virtualization**: Docker
+- **Documentation**: Swagger
 
-## Execução
+<h2 id="structure">📂 Folders structure</h2>
 
-Para clonar e acessar o repositório contendo a API, execute os seguintes comandos no terminal:
+```
+src/main/java/com/unilink/api/
+  ├── UnilinkApiApplication.java
+  ├── config/
+  ├── controller/
+  ├── dtos/
+  ├── enums/
+  ├── exception/
+  ├── model/
+  ├── repository/
+      ├── filters/
+      └── specifications/
+  ├── security/
+  ├── seed/
+  └── service/
+```
+
+<h2 id="started">🚀 Getting started</h2>
+
+Here you describe how to run your project locally
+
+<h3>Cloning</h3>
+
 ```bash
 git clone https://github.com/joaoloss/unilink-backend.git
 cd unilink-backend/api/
 ```
 
-Para iniciar a API localmente, execute o seguinte comando:
+<h3>Config .env variables</h2>
+
+Create your configuration file `.env` inside the api folder with the following information:
+
+```
+DB_HOST=<db address>
+DB_PORT=<db port>
+DB_NAME=<db name>
+DB_USER=<db user>
+DB_PASSWORD=<db password>
+R2_ACCOUNT_ID=<r2 account id>
+R2_ACCESS_KEY_ID=<r2 access key id>
+R2_SECRET_ACCESS_KEY=<r2 secret access key>
+```
+
+<h3>Starting without docker</h3>
+
+How to start your project
+
 ```bash
 ./mvnw spring-boot:run
 ```
 
-## Documentação
+<h3>Starting with docker</h3>
 
-Para acessar a documentação do projeto, inicie a API e acesse http://localhost:8080/swagger-ui/index.html
+1. Build the image:
 
-## Desenvolvedores
-* [Conrado Antoniazi dos Santos](https://github.com/ConradoAntoniazi)
-* [João Pedro Pereira Loss](https://github.com/joaoloss)
-* [Raphael Correia Dornelas](https://github.com/raphaelitos)
+```bash
+docker build -t unilink-api:1.0 .
+```
+
+2. Run the image:
+
+```bash
+docker run --env-file .env -p 8080:8080 unilink-api:1.0
+```
+
+<h2 id="routes">📍 API Endpoints</h2>
+​
+To view a detailed description of the API endpoints, start the application and open the following URL in your browser to access the Swagger documentation.
+
+```
+http://localhost:8080/swagger-ui.html
+```
+
+<p align="center">
+  <img src="imgs/swagger_screenshot.png" width="800" alt="Swagger page">
+</p>
+
+<h2 id="uml">⚙️ UML Class</h2>
+
+Below is a basic, non-exhaustive representation of the UML class.
+
+<p align="center">
+  <img src="imgs/unilink_uml.png" width="400" alt="UML Diagram">
+</p>
+
+<h2 id="user_roles">User roles</h2>
+
+<h3>SUPER_ADMIN</h3>
+
+- Full system access (unrestricted).
+- When the database is initialized and empty, a **default Super Admin** account is automatically created:
+  - **Username:** `superAdmin`
+  - **Email:** `super.admin@dev.com`
+  - **Password:** `admin123!`
+
+<h3>PROJECT_ADMIN</h3>
+
+- Restricted access, limited to their assigned project.
+- Permissions:
+  - ✅ Can edit their own project.  
+  - ❌ Cannot create new centers.  
+  - ❌ Cannot create new users.  
+
+<h2 id="colab">🤝 Collaborators</h2>
+
+<p align="center">
+ <a href="https://github.com/ConradoAntoniazi">Conrado Antoniazi</a> • 
+ <a href="https://github.com/joaoloss">João Loss</a> • 
+  <a href="https://github.com/raphaelitos">Raphael Dornelas</a>
+</p>

@@ -1,26 +1,31 @@
-# Documentação Swagger - Unilink API
+# Swagger Documentation - Unilink API
 
-## Visão Geral
+## Overview
 
-A API do Unilink está documentada usando **Swagger/OpenAPI 3** através da biblioteca `springdoc-openapi`. Esta documentação fornece uma interface interativa para testar e explorar todos os endpoints da API.
+The Unilink API is documented using **Swagger/OpenAPI 3** via the `springdoc-openapi` library. This documentation provides an interactive interface to explore and test all API endpoints.
 
-## Como Acessar
+## How to Access
 
-### 1. Interface Swagger UI
-Após iniciar a aplicação, acesse a interface Swagger UI em:
+### 1. Swagger UI Interface
+
+After starting the application, access Swagger UI at:
+
 ```
 http://localhost:8080/swagger-ui.html
 ```
 
-### 2. Especificação OpenAPI (JSON)
-A especificação OpenAPI em formato JSON está disponível em:
+### 2. OpenAPI Specification (JSON)
+
+The OpenAPI specification in JSON format is available at:
+
 ```
 http://localhost:8080/api-docs
 ```
 
-## Configurações
+## Configuration
 
-### Configurações no application.properties
+### `application.properties` Settings
+
 ```properties
 # Swagger/OpenAPI Configuration
 springdoc.api-docs.path=/api-docs
@@ -30,82 +35,93 @@ springdoc.swagger-ui.tagsSorter=alpha
 springdoc.swagger-ui.doc-expansion=none
 ```
 
-### Configuração da API
-A configuração principal do OpenAPI está na classe `OpenApiConfig.java` que define:
-- Título e descrição da API
-- Informações de contato
-- Licença
-- Servidores disponíveis
+### API Configuration
 
-## Endpoints Documentados
+The main OpenAPI configuration is in the `OpenApiConfig.java` class and defines:
 
-### 🔐 Autenticação
-- **POST** `/api/auth/login` - Realizar login de usuário
+* API title and description
+* Contact information
+* License
+* Available servers
 
-### 👥 Usuários
-- **GET** `/api/users` - Listar todos os usuários
-- **GET** `/api/users/{id}` - Buscar usuário por ID
-- **POST** `/api/users` - Criar novo usuário
-- **PUT** `/api/users/{id}` - Atualizar usuário
-- **DELETE** `/api/users/{id}` - Excluir usuário
+## Documented Endpoints
 
-### 📋 Projetos
-- **GET** `/api/projects` - Listar projetos (com filtros opcionais)
-- **GET** `/api/projects/{id}` - Buscar projeto por ID
-- **POST** `/api/projects` - Criar novo projeto
-- **PUT** `/api/projects/{id}` - Atualizar projeto
-- **DELETE** `/api/projects/{id}` - Excluir projeto
+### 🔐 Authentication
 
-### 🏢 Centros
-- **GET** `/api/centers` - Listar todos os centros
-- **GET** `/api/centers/{id}` - Buscar centro por ID
-- **POST** `/api/centers` - Criar novo centro
-- **PUT** `/api/centers/{id}` - Atualizar centro
-- **DELETE** `/api/centers/{id}` - Excluir centro
+* **POST** `/api/auth/login` - User login
+
+### 👥 Users
+
+* **GET** `/api/users` - List all users
+* **GET** `/api/users/{id}` - Get user by ID
+* **POST** `/api/users` - Create new user
+* **PUT** `/api/users/{id}` - Update user
+* **DELETE** `/api/users/{id}` - Delete user
+
+### 📋 Projects
+
+* **GET** `/api/projects` - List projects (optional filters supported)
+* **GET** `/api/projects/{id}` - Get project by ID
+* **POST** `/api/projects` - Create new project
+* **PUT** `/api/projects/{id}` - Update project
+* **DELETE** `/api/projects/{id}` - Delete project
+
+### 🏢 Centers
+
+* **GET** `/api/centers` - List all centers
+* **GET** `/api/centers/{id}` - Get center by ID
+* **POST** `/api/centers` - Create new center
+* **PUT** `/api/centers/{id}` - Update center
+* **DELETE** `/api/centers/{id}` - Delete center
 
 ### 🏷️ Tags
-- **GET** `/api/tags` - Listar todas as tags
-- **GET** `/api/tags/{id}` - Buscar tag por ID
-- **POST** `/api/tags` - Criar nova tag
-- **PUT** `/api/tags/{id}` - Atualizar tag
-- **DELETE** `/api/tags/{id}` - Excluir tag
 
-## DTOs Documentados
+* **GET** `/api/tags` - List all tags
+* **GET** `/api/tags/{id}` - Get tag by ID
+* **POST** `/api/tags` - Create new tag
+* **PUT** `/api/tags/{id}` - Update tag
+* **DELETE** `/api/tags/{id}` - Delete tag
+
+## Documented DTOs
 
 ### UserRequestDTO
+
 ```json
 {
-  "name": "João Silva",
-  "email": "joao.silva@email.com",
-  "password": "senha123",
+  "name": "John Silva",
+  "email": "john.silva@email.com",
+  "password": "password123",
   "role": "STUDENT"
 }
 ```
 
 ### ProjectRequestDTO
+
 ```json
 {
-  "name": "Sistema de Gestão Escolar",
-  "description": "Sistema completo para gerenciamento de escolas",
-  "centerId": "uuid-do-centro",
-  "ownerId": "uuid-do-proprietario",
+  "name": "School Management System",
+  "description": "Complete system for managing schools",
+  "centerId": "center-uuid",
+  "ownerId": "owner-uuid",
   "openForApplications": true,
   "imgUrl": "https://example.com/project-image.jpg",
   "teamSize": 5,
-  "tagsToBeAdded": ["uuid-tag1", "uuid-tag2"],
-  "tagsToBeRemoved": ["uuid-tag3"]
+  "tagsToBeAdded": ["tag-uuid1", "tag-uuid2"],
+  "tagsToBeRemoved": ["tag-uuid3"]
 }
 ```
 
 ### CenterRequestDTO
+
 ```json
 {
-  "name": "Centro de Tecnologia",
-  "centerUrl": "https://centro-tecnologia.com"
+  "name": "Technology Center",
+  "centerUrl": "https://technology-center.com"
 }
 ```
 
 ### TagRequestDTO
+
 ```json
 {
   "name": "Java",
@@ -113,41 +129,44 @@ A configuração principal do OpenAPI está na classe `OpenApiConfig.java` que d
 }
 ```
 
-## Códigos de Resposta
+## Response Codes
 
-### Sucesso
-- **200** - Operação realizada com sucesso
-- **204** - Operação realizada com sucesso (sem conteúdo)
+### Success
 
-### Erro
-- **400** - Dados inválidos fornecidos
-- **401** - Credenciais inválidas
-- **404** - Recurso não encontrado
+* **200** - Operation successful
+* **204** - Operation successful (no content)
 
-## Como Usar a Interface Swagger
+### Error
 
-1. **Acesse** `http://localhost:8080/swagger-ui.html`
-2. **Explore** os endpoints organizados por tags
-3. **Clique** em um endpoint para expandir
-4. **Clique** em "Try it out" para testar
-5. **Preencha** os parâmetros necessários
-6. **Execute** a requisição
-7. **Visualize** a resposta
+* **400** - Invalid data provided
+* **401** - Invalid credentials
+* **404** - Resource not found
 
-## Benefícios da Documentação Swagger
+## Using the Swagger Interface
 
-- ✅ **Interface Interativa** - Teste endpoints diretamente no navegador
-- ✅ **Documentação Automática** - Sempre atualizada com o código
-- ✅ **Exemplos de Uso** - DTOs com exemplos práticos
-- ✅ **Códigos de Resposta** - Documentação completa de respostas
-- ✅ **Validação** - Interface valida dados antes do envio
-- ✅ **Exportação** - Gera especificação OpenAPI para outras ferramentas
+1. **Access** `http://localhost:8080/swagger-ui.html`
+2. **Browse** endpoints organized by tags
+3. **Click** an endpoint to expand it
+4. **Click** "Try it out" to test
+5. **Fill in** required parameters
+6. **Execute** the request
+7. **View** the response
 
-## Desenvolvimento
+## Benefits of Swagger Documentation
 
-Para adicionar documentação a novos endpoints:
+* ✅ **Interactive Interface** - Test endpoints directly in the browser
+* ✅ **Automatic Documentation** - Always up to date with the code
+* ✅ **Usage Examples** - DTOs with practical examples
+* ✅ **Response Codes** - Full documentation of responses
+* ✅ **Validation** - Interface validates data before submission
+* ✅ **Export** - Generate OpenAPI spec for other tools
 
-1. **Importe** as anotações do Swagger:
+## Development
+
+To document new endpoints:
+
+1. **Import** Swagger annotations:
+
 ```java
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -158,25 +177,28 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Parameter;
 ```
 
-2. **Adicione** a anotação `@Tag` na classe:
+2. **Add** `@Tag` to the class:
+
 ```java
-@Tag(name = "Nome da Tag", description = "Descrição dos endpoints")
+@Tag(name = "Tag Name", description = "Description of the endpoints")
 ```
 
-3. **Documente** cada método com `@Operation`:
+3. **Document** each method with `@Operation`:
+
 ```java
 @Operation(
-    summary = "Resumo da operação",
-    description = "Descrição detalhada"
+    summary = "Operation summary",
+    description = "Detailed description"
 )
 @ApiResponses(value = {
-    @ApiResponse(responseCode = "200", description = "Sucesso"),
-    @ApiResponse(responseCode = "400", description = "Erro")
+    @ApiResponse(responseCode = "200", description = "Success"),
+    @ApiResponse(responseCode = "400", description = "Error")
 })
 ```
 
-4. **Documente** parâmetros com `@Parameter` e `@Schema`:
+4. **Document** parameters with `@Parameter` and `@Schema`:
+
 ```java
-@Parameter(description = "Descrição do parâmetro")
-@Schema(description = "Descrição do DTO")
+@Parameter(description = "Parameter description")
+@Schema(description = "DTO description")
 ```
