@@ -12,7 +12,7 @@
 </p>
 
 <p align="center">
-    <b>This repo contains the backend of UniLink, a plataform that provides a centralized, simple, and intuitive view of all extracurricular projects offered by a university.</b>
+    <b>This repo contains the backend of UniLink, a plataform that provides a centralized, simple, and intuitive view of all extracurricular projects offered by a university. <a href="https://github.com/raphaelitos/unilink-frontend">Here</a> is the frontend repo.</b>
 </p>
 
 <h2 id="technologies">💻 Technologies</h2>
